@@ -7,7 +7,7 @@ using System.Threading.Tasks;
 
 namespace Bomber.Model
 {
-    public class Player
+    public class Player:Unit
     {
         public event EventHandler<EventArgs> PositionChanged;
 

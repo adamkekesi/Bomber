@@ -4,12 +4,9 @@ using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
 
-namespace Bomber.Persistence
+namespace Bomber.Model
 {
-    public enum Field
+    public class Bomb:Unit
     {
-        Enemy,
-        Wall,
-        Empty
     }
 }

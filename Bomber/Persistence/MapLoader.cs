@@ -15,11 +15,11 @@ namespace Bomber.Persistence
             _path = path;
         }
 
-        public Field[,] Load()
+        public CellContent[,] Load()
         {
             string[] lines = File.ReadAllLines(_path);
             int mapSize = lines.Length;
-            Field[,] matrix = new Field[mapSize, mapSize];
+            CellContent[,] matrix = new CellContent[mapSize, mapSize];
 
             for (int i = 0; i < lines.Length; i++)
             {
@@ -33,7 +33,7 @@ namespace Bomber.Persistence
                     char cell = line[j];
                     try
                     {
-                        matrix[i, j] = (Field)int.Parse(cell.ToString());
+                        matrix[i, j] = (CellContent)int.Parse(cell.ToString());
                     }
                     catch (Exception)
                     {

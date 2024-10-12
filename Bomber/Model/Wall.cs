@@ -4,10 +4,9 @@ using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
 
-namespace Bomber.Persistence
+namespace Bomber.Model
 {
-    public interface IMapLoader
+    public class Wall:IField
     {
-        public CellContent[,] Load();
     }
 }

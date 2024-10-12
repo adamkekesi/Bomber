@@ -6,8 +6,10 @@ using System.Threading.Tasks;
 
 namespace Bomber.Persistence
 {
-    public interface IMapLoader
+    public enum CellContent
     {
-        public CellContent[,] Load();
+        Enemy,
+        Wall,
+        Empty
     }
 }

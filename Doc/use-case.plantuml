@@ -1,0 +1,43 @@
+@startuml
+actor Játékos
+actor Bomba
+actor Ellenség
+
+(Lép) as stepPlayer
+(Lép) as stepEnemy
+
+(Meghal) as diePlayer
+(Meghal) as dieEnemy
+
+Játékos -- stepPlayer
+Játékos -- (Bombát rak)
+Játékos -- (Új játék)
+Játékos -- (Játék szüneteltetése)
+Játékos -- (Kilépés)
+
+(Új játék) ..> stepPlayer : <<precedes>>
+(Bombát rak) ..> stepPlayer : <<precedes>>
+
+(Új játék) ..> (Játékidő telik) : <<invokes>>
+(Játékidő telik) ..> (Felrobban): <<invokes>>
+
+Bomba -- (Felrobban)
+
+(Felrobban) ..> (Eltűnik): <<invokes>>
+
+Ellenség -- stepEnemy
+(Játékidő telik) ..> stepEnemy: <<invokes>>
+
+Játékos -- diePlayer
+Ellenség -- dieEnemy
+
+Felrobban ..> diePlayer :<<invokes>>
+Felrobban ..> dieEnemy :<<invokes>>
+
+stepEnemy ..> diePlayer :<<invokes>>
+stepPlayer ..> diePlayer :<<invokes>>
+
+dieEnemy ..> (Játék vége) :<<invokes>>
+diePlayer ..> (Játék vége):<<invokes>>
+
+@enduml

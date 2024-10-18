@@ -7,25 +7,33 @@ using System.Threading.Tasks;
 
 namespace Bomber.Model
 {
-    public class Player:Unit
+
+    public class Player : Unit
     {
-        public event EventHandler<EventArgs> PositionChanged;
+        public event EventHandler? BombPlanted;
 
-        private Point position;
-
-        public Point Position
+        public Player(Point startingPos) : base(startingPos)
         {
-            get => position; set
-            {
-                if (position == value)
-                {
-                    return;
-                }
-                position = value;
-                PositionChanged?.Invoke(this, EventArgs.Empty);
-            }
         }
 
-        
+        public override void OnCollision(IField otherField, Point point)
+        {
+
+        }
+
+        public void PlantBomb()
+        {
+            if (!Alive)
+            {
+                return;
+            }
+            BombPlanted?.Invoke(this, EventArgs.Empty);
+        }
+
+        public override void Dispose()
+        {
+            base.Dispose();
+            BombPlanted = null;
+        }
     }
 }

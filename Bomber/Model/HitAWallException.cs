@@ -7,11 +7,13 @@ using System.Threading.Tasks;
 
 namespace Bomber.Model
 {
-    public class Wall : IField
+    public class HitAWallException: Exception
     {
-        public void OnCollision(IField otherField, Point point)
+        public Point Wall { get; private set; }
+
+        public HitAWallException(Point wall)
         {
-            throw new HitAWallException(point);
+            Wall = wall;
         }
     }
 }

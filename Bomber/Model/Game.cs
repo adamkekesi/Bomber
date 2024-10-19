@@ -22,9 +22,11 @@ namespace Bomber.Model
 
         public event EventHandler? TimeElapsed;
 
-        public event EventHandler? BombsChanged;
+        public event EventHandler<Map.MapChangedEventArgs>? BombAdded;
 
         public bool Paused { get; private set; }
+
+        public bool IsGameOver { get; private set; }
 
         public int EnemiesKilled
         {
@@ -70,8 +72,6 @@ namespace Bomber.Model
 
         private TimeSpan time = TimeSpan.Zero;
 
-        private DateTime lastTick;
-
         public Game(IMapLoader mapLoader)
         {
             r = new Random();
@@ -80,7 +80,7 @@ namespace Bomber.Model
             enemyStepScheduler.Start();
 
             timer = new System.Timers.Timer(100);
-            timer.Elapsed += OnTick; ;
+            timer.Elapsed += OnTick;
             timer.Start();
 
             player = new Player(new Point(0, 0));
@@ -129,6 +129,10 @@ namespace Bomber.Model
 
         public void Resume()
         {
+            if (IsGameOver) 
+            {
+                return;
+            }
             Paused = false;
             enemyStepScheduler.Start();
             timer.Start();
@@ -144,6 +148,7 @@ namespace Bomber.Model
             {
                 Bomb bomb = new Bomb(unit.Position, bombExplodeTime);
                 activeBombs.Add(bomb);
+                BombsChanged?.Invoke(this, new Map.MapChangedEventArgs(bomb.Position));
                 bomb.Exploded += OnBombExploded;
             }
         }
@@ -160,15 +165,9 @@ namespace Bomber.Model
 
         private void OnEnemyStepSchedulerTick(object? sender, ElapsedEventArgs e)
         {
-            foreach (var enemy in enemies)
+            foreach (Enemy? enemy in enemies)
             {
-                try
-                {
-                    enemy.Move();
-                }
-                catch (HitAWallException)
-                {
-                }
+                enemy.Move();
             }
         }
 
@@ -197,6 +196,13 @@ namespace Bomber.Model
         {
             map.RemoveField(player.Position);
             player.Dispose();
+            OnGameOver();
+        }
+
+        private void OnGameOver()
+        {
+            Pause();
+            IsGameOver = true;
             GameOver?.Invoke(this, EventArgs.Empty);
         }
 

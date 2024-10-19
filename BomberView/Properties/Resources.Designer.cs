@@ -83,39 +83,9 @@ namespace BomberView.Properties {
         /// <summary>
         ///   Looks up a localized resource of type System.Drawing.Bitmap.
         /// </summary>
-        internal static System.Drawing.Bitmap enemy_down {
+        internal static System.Drawing.Bitmap enemy {
             get {
-                object obj = ResourceManager.GetObject("enemy_down", resourceCulture);
-                return ((System.Drawing.Bitmap)(obj));
-            }
-        }
-        
-        /// <summary>
-        ///   Looks up a localized resource of type System.Drawing.Bitmap.
-        /// </summary>
-        internal static System.Drawing.Bitmap enemy_left {
-            get {
-                object obj = ResourceManager.GetObject("enemy_left", resourceCulture);
-                return ((System.Drawing.Bitmap)(obj));
-            }
-        }
-        
-        /// <summary>
-        ///   Looks up a localized resource of type System.Drawing.Bitmap.
-        /// </summary>
-        internal static System.Drawing.Bitmap enemy_right {
-            get {
-                object obj = ResourceManager.GetObject("enemy_right", resourceCulture);
-                return ((System.Drawing.Bitmap)(obj));
-            }
-        }
-        
-        /// <summary>
-        ///   Looks up a localized resource of type System.Drawing.Bitmap.
-        /// </summary>
-        internal static System.Drawing.Bitmap enemy_up {
-            get {
-                object obj = ResourceManager.GetObject("enemy_up", resourceCulture);
+                object obj = ResourceManager.GetObject("enemy", resourceCulture);
                 return ((System.Drawing.Bitmap)(obj));
             }
         }

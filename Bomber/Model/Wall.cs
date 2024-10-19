@@ -11,7 +11,7 @@ namespace Bomber.Model
     {
         public void OnCollision(IField otherField, Point point)
         {
-            throw new HitAWallException(point);
+            
         }
     }
 }

@@ -37,54 +37,25 @@ namespace BomberView
 
         private void DrawField(Player p)
         {
-            enemyUp.Visible = false;
-            enemyDown.Visible = false;
-            enemyLeft.Visible = false;
-            enemyRight.Visible = false;
+            enemy.Visible = false;
             wall.Visible = false;
             player.Visible = true;
         }
 
         private void DrawField(Wall w)
         {
-            enemyUp.Visible = false;
-            enemyDown.Visible = false;
-            enemyLeft.Visible = false;
-            enemyRight.Visible = false;
+            enemy.Visible = false;
             wall.Visible = true;
             player.Visible = false;
         }
 
         private void DrawField(Enemy e)
         {
-            enemyUp.Visible = false;
-            enemyDown.Visible = false;
-            enemyLeft.Visible = false;
-            enemyRight.Visible = false;
+            enemy.Visible = true;
             wall.Visible = false;
             player.Visible = false;
 
-            switch (e.Orientation)
-            {
-                case Direction.Up:
-                    enemyUp.Visible = true;
-
-                    break;
-                case Direction.Down:
-                    enemyDown.Visible = true;
-
-                    break;
-                case Direction.Left:
-                    enemyLeft.Visible = true;
-
-                    break;
-                case Direction.Right:
-                    enemyRight.Visible = true;
-
-                    break;
-                default:
-                    break;
-            }
+            
         }
 
         private void DrawField(IField? f)
@@ -92,10 +63,7 @@ namespace BomberView
             SuspendLayout();
             if (f == null)
             {
-                enemyUp.Visible = false;
-                enemyDown.Visible = false;
-                enemyLeft.Visible = false;
-                enemyRight.Visible = false;
+                enemy.Visible = false;
                 wall.Visible = false;
                 player.Visible = false;
                 ResumeLayout();

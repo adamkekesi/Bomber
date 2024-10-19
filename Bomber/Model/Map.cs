@@ -8,7 +8,7 @@ using System.Threading.Tasks;
 
 namespace Bomber.Model
 {
-    public class Map: IDisposable
+    public class Map : IDisposable
     {
         public class OutOfMapException : Exception
         {
@@ -20,24 +20,29 @@ namespace Bomber.Model
             }
         }
 
-        public class MapChangedEventArgs: EventArgs
+        public class MapChangedEventArgs : EventArgs
         {
             public Point[] AffectedCells { get; private set; }
 
             public MapChangedEventArgs(params Point[] affectedCells)
             {
-                    AffectedCells=affectedCells;
+                AffectedCells = affectedCells;
             }
         }
 
-        public event EventHandler<MapChangedEventArgs>? MapChanged;
+        public int Size => fields.GetLength(0);
 
-        public IField?[,] Fields => fields;
+        public IField? this[int i, int j] => fields[i, j];
+
+        public IField? this[Point p] => this[p.X,p.Y];
+
+        public event EventHandler<MapChangedEventArgs>? MapChanged;
 
         private readonly IField?[,] fields;
 
         public Map(CellContent[,] cells, Player player, Random r, out List<Enemy> enemies)
         {
+            
             int n = cells.GetLength(0);
             enemies = new List<Enemy>();
             fields = new IField[n, n];
@@ -107,6 +112,7 @@ namespace Bomber.Model
             if (IsPointOutOfMap(newPos))
             {
                 HandleCollision(field, new Wall(), newPos);
+                return;
             }
 
             var targetField = fields[newPos.X, newPos.Y];
@@ -114,6 +120,7 @@ namespace Bomber.Model
             if (targetField != null)
             {
                 HandleCollision(field, targetField, newPos);
+                return;
             }
 
             if (field is Unit unit)
@@ -123,7 +130,7 @@ namespace Bomber.Model
             fields[pos.X, pos.Y] = null;
             fields[newPos.X, newPos.Y] = field;
 
-            MapChanged?.Invoke(this, new MapChangedEventArgs(pos,newPos));
+            MapChanged?.Invoke(this, new MapChangedEventArgs(pos, newPos));
         }
 
         public void ApplyBlast(Point origin, int radius)
@@ -132,7 +139,7 @@ namespace Bomber.Model
             {
                 for (int j = origin.Y - radius; j < origin.Y + radius + 1; j++)
                 {
-                    if (!IsPointOutOfMap(new Point(i, j)) && fields[i,j] is Unit u)
+                    if (!IsPointOutOfMap(new Point(i, j)) && fields[i, j] is Unit u)
                     {
                         u.Kill();
                     }
@@ -212,6 +219,6 @@ namespace Bomber.Model
             return newPos;
         }
 
-       
+
     }
 }

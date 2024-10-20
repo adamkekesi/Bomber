@@ -12,17 +12,13 @@ namespace Bomber.Model
     {
         private const int enemyStepInterval = 800;
 
-        private const int bombExplodeTime = 2000;
-
-        private const int bombRadius = 3;
+       
 
         public event EventHandler? GameOver;
 
         public event EventHandler? StatUpdated;
 
         public event EventHandler? TimeElapsed;
-
-        public event EventHandler<Map.MapChangedEventArgs>? BombAdded;
 
         public bool Paused { get; private set; }
 
@@ -60,8 +56,6 @@ namespace Bomber.Model
 
         private readonly List<Enemy> enemies;
 
-        private readonly List<Bomb> activeBombs;
-
         private Random r;
 
         private System.Timers.Timer enemyStepScheduler;
@@ -87,8 +81,6 @@ namespace Bomber.Model
             player.Died += OnPlayerDied;
             player.Moved += OnUnitMoved;
             player.BombPlanted += OnBombPlanted;
-
-            activeBombs = new List<Bomb>();
 
             map = new Map(mapLoader.Load(), player, r, out enemies);
             foreach (var enemy in enemies)

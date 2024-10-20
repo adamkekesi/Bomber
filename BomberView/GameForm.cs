@@ -52,7 +52,7 @@ namespace BomberView
             scoreBoard.Visible = true;
             game.TimeElapsed += OnTimeElapsed;
             game.StatUpdated += OnStatUpdated;
-            game.BombsChanged
+            
             game.Map.MapChanged += OnMapChanged;
         }
 

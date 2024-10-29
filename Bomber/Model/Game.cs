@@ -10,9 +10,11 @@ namespace Bomber.Model
 {
     public class Game : IDisposable
     {
-        private const int enemyStepInterval = 800;
+        private const int enemyStepInterval = 1400;
 
-       
+        private const int bombExplodeTime = 2000;
+
+        private const int bombRadius = 3;
 
         public event EventHandler? GameOver;
 
@@ -23,6 +25,8 @@ namespace Bomber.Model
         public bool Paused { get; private set; }
 
         public bool IsGameOver { get; private set; }
+
+        public bool Won => enemies.Count == 0 && player.Alive;
 
         public int EnemiesKilled
         {
@@ -50,11 +54,15 @@ namespace Bomber.Model
 
         public Map Map => map;
 
+        public BombCollection Bombs => bombs;
+
         private readonly Map map;
 
         private readonly Player player;
 
         private readonly List<Enemy> enemies;
+
+        private readonly BombCollection bombs;
 
         private Random r;
 
@@ -80,9 +88,37 @@ namespace Bomber.Model
             player = new Player(new Point(0, 0));
             player.Died += OnPlayerDied;
             player.Moved += OnUnitMoved;
-            player.BombPlanted += OnBombPlanted;
+
+            bombs = new BombCollection();
 
             map = new Map(mapLoader.Load(), player, r, out enemies);
+            foreach (var enemy in enemies)
+            {
+                enemy.Moved += OnUnitMoved;
+                enemy.Died += OnEnemyDied;
+            }
+        }
+
+        public Game(Player player, Map map, List<Enemy> enemies, BombCollection bombs)
+        {
+            r = new Random();
+            enemyStepScheduler = new System.Timers.Timer(enemyStepInterval);
+            enemyStepScheduler.Elapsed += OnEnemyStepSchedulerTick;
+            enemyStepScheduler.Start();
+
+            timer = new System.Timers.Timer(100);
+            timer.Elapsed += OnTick;
+            timer.Start();
+
+            this.player = player;
+            player.Died += OnPlayerDied;
+            player.Moved += OnUnitMoved;
+
+            this.bombs = bombs;
+
+            this.enemies = enemies;
+
+            this.map = map;
             foreach (var enemy in enemies)
             {
                 enemy.Moved += OnUnitMoved;
@@ -105,7 +141,9 @@ namespace Bomber.Model
             {
                 return;
             }
-            player.PlantBomb();
+            Bomb bomb = player.PlantBomb(bombExplodeTime, bombRadius);
+            bomb.Exploded += OnBombExploded;
+            bombs.PlantBomb(bomb);
         }
 
         public void Pause()
@@ -113,45 +151,32 @@ namespace Bomber.Model
             Paused = true;
             enemyStepScheduler.Stop();
             timer.Stop();
-            foreach (var bomb in activeBombs)
-            {
-                bomb.Pause();
-            }
+            bombs.Pause();
         }
 
         public void Resume()
         {
-            if (IsGameOver) 
+            if (IsGameOver)
             {
                 return;
             }
             Paused = false;
             enemyStepScheduler.Start();
             timer.Start();
-            foreach (var bomb in activeBombs)
-            {
-                bomb.Resume();
-            }
-        }
-
-        private void OnBombPlanted(object? sender, EventArgs e)
-        {
-            if (sender is Unit unit)
-            {
-                Bomb bomb = new Bomb(unit.Position, bombExplodeTime);
-                activeBombs.Add(bomb);
-                BombsChanged?.Invoke(this, new Map.MapChangedEventArgs(bomb.Position));
-                bomb.Exploded += OnBombExploded;
-            }
+            bombs.Resume();
         }
 
         private void OnBombExploded(object? sender, EventArgs e)
         {
             if (sender is Bomb bomb)
             {
-                map.ApplyBlast(bomb.Position, bombRadius);
-                activeBombs.Remove(bomb);
-                bomb.Dispose();
+                map.ForEachInArea(bomb.Position, bombRadius, (field) =>
+                {
+                    if (field is Unit unit)
+                    {
+                        unit.Kill();
+                    }
+                });
             }
         }
 
@@ -211,15 +236,11 @@ namespace Bomber.Model
             {
                 enemy.Dispose();
             }
-            foreach (var bomb in activeBombs)
-            {
-                bomb.Dispose();
-            }
+            bombs.Dispose();
 
             GameOver = null;
             StatUpdated = null;
             TimeElapsed = null;
-            BombsChanged = null;
         }
     }
 }

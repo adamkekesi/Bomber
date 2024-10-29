@@ -9,31 +9,17 @@ namespace Bomber.Model
 {
     public class Enemy : Unit
     {
-        public event EventHandler? OrientationChanged;
-
         private readonly Random r;
 
-        private Direction orientation;
-
-        public Direction Orientation
-        {
-            get => orientation; private set
-            {
-                if (orientation == value)
-                {
-                    return;
-                }
-                orientation = value;
-                OrientationChanged?.Invoke(this, EventArgs.Empty);
-            }
-        }
+        public Direction Orientation { get; private set; }
 
         public Enemy(Random r, Point startingPos) : base(startingPos)
         {
             this.r = r;
+            this.Orientation = Direction.Up;
         }
 
-        public void Move()
+        public virtual void Move()
         {
             Move(Orientation);
         }
@@ -54,10 +40,5 @@ namespace Bomber.Model
             }
         }
 
-        public override void Dispose()
-        {
-            base.Dispose();
-            OrientationChanged = null;
-        }
     }
 }

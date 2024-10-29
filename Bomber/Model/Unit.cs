@@ -46,7 +46,7 @@ namespace Bomber.Model
             Moved?.Invoke(this, new MovedEventArgs(Position, dir));
         }
 
-        public void Kill()
+        public virtual void Kill()
         {
             Alive = false;
             Died?.Invoke(this, EventArgs.Empty);

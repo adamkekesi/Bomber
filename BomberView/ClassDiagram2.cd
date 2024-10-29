@@ -1,0 +1,35 @@
+﻿<?xml version="1.0" encoding="utf-8"?>
+<ClassDiagram MajorVersion="1" MinorVersion="1">
+  <Class Name="BomberView.GameForm">
+    <Position X="12.5" Y="10.75" Width="1.5" />
+    <TypeIdentifier>
+      <HashCode>AIQAAAgAASACABABAACQQICiAABCAQgsABAAAAAQAAA=</HashCode>
+      <FileName>GameForm.cs</FileName>
+    </TypeIdentifier>
+    <ShowAsAssociation>
+      <Field Name="game" />
+    </ShowAsAssociation>
+    <ShowAsCollectionAssociation>
+      <Field Name="cells" />
+    </ShowAsCollectionAssociation>
+  </Class>
+  <Class Name="BomberView.Cell">
+    <Position X="15.5" Y="10.25" Width="1.5" />
+    <TypeIdentifier>
+      <HashCode>AACAAAAAACAAAAAQAoCAAAAiAAAAAAQBAAAEAAAAAAI=</HashCode>
+      <FileName>Cell.cs</FileName>
+    </TypeIdentifier>
+    <ShowAsAssociation>
+      <Field Name="field" />
+    </ShowAsAssociation>
+  </Class>
+  <Class Name="Bomber.Model.Game">
+    <Position X="19" Y="13.25" Width="1.5" />
+    <TypeIdentifier />
+  </Class>
+  <Interface Name="Bomber.Model.IField">
+    <Position X="19.5" Y="10.25" Width="1.5" />
+    <TypeIdentifier />
+  </Interface>
+  <Font Name="Segoe UI" Size="9" />
+</ClassDiagram>

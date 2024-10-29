@@ -40,13 +40,14 @@
             // 
             // bombContainer
             // 
+            bombContainer.BackColor = Color.Transparent;
             bombContainer.Dock = DockStyle.Fill;
+            bombContainer.Image = Properties.Resources.bomb;
             bombContainer.InitialImage = Properties.Resources.empty;
             bombContainer.Location = new Point(0, 0);
-            bombContainer.Margin = new Padding(3, 2, 3, 2);
             bombContainer.Name = "bombContainer";
-            bombContainer.Size = new Size(131, 112);
-            bombContainer.SizeMode = PictureBoxSizeMode.CenterImage;
+            bombContainer.Size = new Size(150, 149);
+            bombContainer.SizeMode = PictureBoxSizeMode.Zoom;
             bombContainer.TabIndex = 0;
             bombContainer.TabStop = false;
             bombContainer.Visible = false;
@@ -56,9 +57,8 @@
             enemy.Dock = DockStyle.Fill;
             enemy.Image = Properties.Resources.enemy;
             enemy.Location = new Point(0, 0);
-            enemy.Margin = new Padding(3, 2, 3, 2);
             enemy.Name = "enemy";
-            enemy.Size = new Size(131, 112);
+            enemy.Size = new Size(150, 149);
             enemy.SizeMode = PictureBoxSizeMode.Zoom;
             enemy.TabIndex = 3;
             enemy.TabStop = false;
@@ -70,9 +70,8 @@
             wall.Image = Properties.Resources.wall;
             wall.InitialImage = Properties.Resources.wall;
             wall.Location = new Point(0, 0);
-            wall.Margin = new Padding(3, 2, 3, 2);
             wall.Name = "wall";
-            wall.Size = new Size(131, 112);
+            wall.Size = new Size(150, 149);
             wall.SizeMode = PictureBoxSizeMode.Zoom;
             wall.TabIndex = 5;
             wall.TabStop = false;
@@ -84,9 +83,8 @@
             player.Image = Properties.Resources.player;
             player.InitialImage = Properties.Resources.player;
             player.Location = new Point(0, 0);
-            player.Margin = new Padding(3, 2, 3, 2);
             player.Name = "player";
-            player.Size = new Size(131, 112);
+            player.Size = new Size(150, 149);
             player.SizeMode = PictureBoxSizeMode.Zoom;
             player.TabIndex = 6;
             player.TabStop = false;
@@ -94,15 +92,14 @@
             // 
             // Cell
             // 
-            AutoScaleDimensions = new SizeF(7F, 15F);
+            AutoScaleDimensions = new SizeF(8F, 20F);
             AutoScaleMode = AutoScaleMode.Font;
             Controls.Add(bombContainer);
             Controls.Add(player);
             Controls.Add(wall);
             Controls.Add(enemy);
-            Margin = new Padding(3, 2, 3, 2);
             Name = "Cell";
-            Size = new Size(131, 112);
+            Size = new Size(150, 149);
             ((System.ComponentModel.ISupportInitialize)bombContainer).EndInit();
             ((System.ComponentModel.ISupportInitialize)enemy).EndInit();
             ((System.ComponentModel.ISupportInitialize)wall).EndInit();

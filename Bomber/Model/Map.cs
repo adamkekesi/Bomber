@@ -34,7 +34,7 @@ namespace Bomber.Model
 
         public IField? this[int i, int j] => fields[i, j];
 
-        public IField? this[Point p] => this[p.X,p.Y];
+        public IField? this[Point p] => this[p.X, p.Y];
 
         public event EventHandler<MapChangedEventArgs>? MapChanged;
 
@@ -42,7 +42,7 @@ namespace Bomber.Model
 
         public Map(CellContent[,] cells, Player player, Random r, out List<Enemy> enemies)
         {
-            
+
             int n = cells.GetLength(0);
             enemies = new List<Enemy>();
             fields = new IField[n, n];
@@ -74,6 +74,11 @@ namespace Bomber.Model
             fields[0, 0] = player;
         }
 
+        public Map(IField?[,] fields)
+        {
+            this.fields = fields;
+        }
+
         public void RemoveField(int i, int j)
         {
             RemoveField(new Point(i, j));
@@ -94,7 +99,7 @@ namespace Bomber.Model
             Move(new Point(i, j), dir);
         }
 
-        public void Move(Point pos, Direction dir)
+        public virtual void Move(Point pos, Direction dir)
         {
             if (IsPointOutOfMap(pos))
             {
@@ -133,18 +138,20 @@ namespace Bomber.Model
             MapChanged?.Invoke(this, new MapChangedEventArgs(pos, newPos));
         }
 
-        public void ApplyBlast(Point origin, int radius)
+        public void ForEachInArea(Point origin, int radius, Action<IField> action)
         {
             for (int i = origin.X - radius; i < origin.X + radius + 1; i++)
             {
                 for (int j = origin.Y - radius; j < origin.Y + radius + 1; j++)
                 {
-                    if (!IsPointOutOfMap(new Point(i, j)) && fields[i, j] is Unit u)
+                    if (!IsPointOutOfMap(new Point(i, j)) && this[i, j] != null)
                     {
-                        u.Kill();
+                        action(this[i, j]!);
                     }
                 }
             }
+
+
         }
 
         public void Dispose()

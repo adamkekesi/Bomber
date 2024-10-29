@@ -1,0 +1,217 @@
+﻿<?xml version="1.0" encoding="utf-8"?>
+<ClassDiagram MajorVersion="1" MinorVersion="1">
+  <Class Name="Bomber.Model.Bomb">
+    <Position X="13.75" Y="9.5" Width="1.5" />
+    <TypeIdentifier>
+      <HashCode>AAQoAAAAACAAAAAgAAAAAACAAAAAAIAAAAAAAAgAAAA=</HashCode>
+      <FileName>Model\Bomb.cs</FileName>
+    </TypeIdentifier>
+    <Lollipop Position="0.2" />
+  </Class>
+  <Class Name="Bomber.Model.BombCollection">
+    <Position X="9.75" Y="8.5" Width="2.75" />
+    <Compartments>
+      <Compartment Name="Nested Types" Collapsed="false" />
+    </Compartments>
+    <NestedTypes>
+      <Enum Name="Bomber.Model.BombCollection.ChangeType">
+        <TypeIdentifier>
+          <NewMemberFileName>Model\BombCollection.cs</NewMemberFileName>
+        </TypeIdentifier>
+      </Enum>
+      <Class Name="Bomber.Model.BombCollection.BombsChangedEventArgs">
+        <TypeIdentifier>
+          <NewMemberFileName>Model\BombCollection.cs</NewMemberFileName>
+        </TypeIdentifier>
+      </Class>
+    </NestedTypes>
+    <TypeIdentifier>
+      <HashCode>AAAgAAAAADAAAAAAAAAERAAAAAgAAAAAAAAAAAgAAAA=</HashCode>
+      <FileName>Model\BombCollection.cs</FileName>
+    </TypeIdentifier>
+    <ShowAsCollectionAssociation>
+      <Field Name="bombs" />
+    </ShowAsCollectionAssociation>
+    <Lollipop Position="0.2" />
+  </Class>
+  <Class Name="Bomber.Model.Enemy">
+    <Position X="14.25" Y="21.5" Width="1.5" />
+    <TypeIdentifier>
+      <HashCode>AAAAAAAAAYAAAAAAAAAAAAAAAAAAAAAAIAABAAAAAAA=</HashCode>
+      <FileName>Model\Enemy.cs</FileName>
+    </TypeIdentifier>
+    <ShowAsAssociation>
+      <Property Name="Orientation" />
+    </ShowAsAssociation>
+  </Class>
+  <Class Name="Bomber.Model.Player">
+    <Position X="22" Y="20.5" Width="3" />
+    <Compartments>
+      <Compartment Name="Nested Types" Collapsed="false" />
+    </Compartments>
+    <NestedTypes>
+      <Class Name="Bomber.Model.Player.PlayerDeadException">
+        <TypeIdentifier>
+          <NewMemberFileName>Model\Player.cs</NewMemberFileName>
+        </TypeIdentifier>
+      </Class>
+    </NestedTypes>
+    <InheritanceLine Type="Bomber.Model.Unit" ManuallyRouted="true" FixedToPoint="true">
+      <Path>
+        <Point X="19.625" Y="20.577" />
+        <Point X="19.625" Y="21.25" />
+        <Point X="22" Y="21.25" />
+      </Path>
+    </InheritanceLine>
+    <TypeIdentifier>
+      <HashCode>AAAAAAAAABAAAAAAAAAAAAAAAAAAAAAAIAAAAAAAAAA=</HashCode>
+      <FileName>Model\Player.cs</FileName>
+    </TypeIdentifier>
+  </Class>
+  <Class Name="Bomber.Model.Wall">
+    <Position X="22.25" Y="15.25" Width="1.5" />
+    <TypeIdentifier>
+      <HashCode>AAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAIAAAAAAAAAA=</HashCode>
+      <FileName>Model\Wall.cs</FileName>
+    </TypeIdentifier>
+    <Lollipop Position="0.2" />
+  </Class>
+  <Class Name="Bomber.Model.Unit">
+    <Position X="18.25" Y="15.25" Width="2.75" />
+    <Compartments>
+      <Compartment Name="Nested Types" Collapsed="false" />
+    </Compartments>
+    <NestedTypes>
+      <Class Name="Bomber.Model.Unit.MovedEventArgs">
+        <TypeIdentifier>
+          <NewMemberFileName>Model\Unit.cs</NewMemberFileName>
+        </TypeIdentifier>
+      </Class>
+    </NestedTypes>
+    <TypeIdentifier>
+      <HashCode>ACAAAAAAAOAAAAAgAAAAAAAAAAAAAAQAIAAAAAIAAAA=</HashCode>
+      <FileName>Model\Unit.cs</FileName>
+    </TypeIdentifier>
+    <Lollipop Position="0.1" />
+  </Class>
+  <Class Name="Bomber.Model.Map">
+    <Position X="26.5" Y="12.75" Width="3.5" />
+    <Compartments>
+      <Compartment Name="Nested Types" Collapsed="false" />
+    </Compartments>
+    <NestedTypes>
+      <Class Name="Bomber.Model.Map.OutOfMapException">
+        <TypeIdentifier>
+          <NewMemberFileName>Model\Map.cs</NewMemberFileName>
+        </TypeIdentifier>
+      </Class>
+      <Class Name="Bomber.Model.Map.MapChangedEventArgs">
+        <TypeIdentifier>
+          <NewMemberFileName>Model\Map.cs</NewMemberFileName>
+        </TypeIdentifier>
+      </Class>
+    </NestedTypes>
+    <TypeIdentifier>
+      <HashCode>gACQAAQAAKAQgAAACAAAAAABAAAAAAQAAAAAAAAAAAA=</HashCode>
+      <FileName>Model\Map.cs</FileName>
+    </TypeIdentifier>
+    <ShowAsAssociation>
+      <Field Name="fields" />
+    </ShowAsAssociation>
+    <Lollipop Position="0.2" />
+  </Class>
+  <Class Name="Bomber.Model.Game">
+    <Position X="20.5" Y="3" Width="1.5" />
+    <AssociationLine Name="bombs" Type="Bomber.Model.BombCollection" ManuallyRouted="true" FixedFromPoint="true" FixedToPoint="true">
+      <Path>
+        <Point X="20.5" Y="7.688" />
+        <Point X="11.75" Y="7.688" />
+        <Point X="11.75" Y="8.5" />
+      </Path>
+    </AssociationLine>
+    <AssociationLine Name="enemies" Type="Bomber.Model.Enemy" ManuallyRouted="true" FixedFromPoint="true" FixedToPoint="true">
+      <Path>
+        <Point X="21.125" Y="10.651" />
+        <Point X="21.125" Y="14.005" />
+        <Point X="14.75" Y="14.005" />
+        <Point X="14.75" Y="21.5" />
+      </Path>
+      <MemberNameLabel ManuallyPlaced="true">
+        <Position X="0.53" Y="-0.105" />
+      </MemberNameLabel>
+    </AssociationLine>
+    <AssociationLine Name="map" Type="Bomber.Model.Map" FixedFromPoint="true" FixedToPoint="true">
+      <Path>
+        <Point X="22" Y="9.625" />
+        <Point X="22.375" Y="9.625" />
+        <Point X="22.375" Y="14.427" />
+        <Point X="26.5" Y="14.427" />
+      </Path>
+    </AssociationLine>
+    <AssociationLine Name="player" Type="Bomber.Model.Player" FixedFromPoint="true" FixedToPoint="true">
+      <Path>
+        <Point X="21.438" Y="10.651" />
+        <Point X="21.438" Y="20.125" />
+        <Point X="23.562" Y="20.125" />
+        <Point X="23.562" Y="20.5" />
+      </Path>
+    </AssociationLine>
+    <TypeIdentifier>
+      <HashCode>AAQh0QCAALCAgAAAIAAEQAAAAECQCBIFgAABAQiCAQA=</HashCode>
+      <FileName>Model\Game.cs</FileName>
+    </TypeIdentifier>
+    <ShowAsAssociation>
+      <Field Name="bombs" />
+      <Field Name="map" />
+      <Field Name="player" />
+    </ShowAsAssociation>
+    <ShowAsCollectionAssociation>
+      <Field Name="enemies" />
+    </ShowAsCollectionAssociation>
+    <Lollipop Position="0.2" />
+  </Class>
+  <Class Name="Bomber.Persistence.IncorrectMapFileException" Collapsed="true">
+    <Position X="36.75" Y="9.5" Width="1.5" />
+    <TypeIdentifier>
+      <HashCode>AAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAA=</HashCode>
+      <FileName>Persistence\IncorrectMapFileException.cs</FileName>
+    </TypeIdentifier>
+  </Class>
+  <Class Name="Bomber.Persistence.MapLoader">
+    <Position X="34.5" Y="9.5" Width="1.5" />
+    <TypeIdentifier>
+      <HashCode>AAAAgAAAAAACAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAA=</HashCode>
+      <FileName>Persistence\MapLoader.cs</FileName>
+    </TypeIdentifier>
+    <Lollipop Position="0.2" />
+  </Class>
+  <Interface Name="Bomber.Model.IField">
+    <Position X="23.5" Y="12.5" Width="1.5" />
+    <TypeIdentifier>
+      <HashCode>AAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAIAAAAAAAAAA=</HashCode>
+      <FileName>Model\IField.cs</FileName>
+    </TypeIdentifier>
+  </Interface>
+  <Interface Name="Bomber.Persistence.IMapLoader">
+    <Position X="34.5" Y="7.75" Width="1.5" />
+    <TypeIdentifier>
+      <HashCode>AAAAgAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAA=</HashCode>
+      <FileName>Persistence\IMapLoader.cs</FileName>
+    </TypeIdentifier>
+  </Interface>
+  <Enum Name="Bomber.Model.Direction">
+    <Position X="10" Y="20.5" Width="1.5" />
+    <TypeIdentifier>
+      <HashCode>AAAAAAIAAAAAAAAAAAAAAAAAAAAAAAAACACAAAAAAAI=</HashCode>
+      <FileName>Model\Direction.cs</FileName>
+    </TypeIdentifier>
+  </Enum>
+  <Enum Name="Bomber.Persistence.CellContent">
+    <Position X="32.25" Y="9.5" Width="1.5" />
+    <TypeIdentifier>
+      <HashCode>AAAAAgAAAAAAAAAAAAIAAAAAAAAAAAQAAAAAAAAAAAA=</HashCode>
+      <FileName>Persistence\CellContent.cs</FileName>
+    </TypeIdentifier>
+  </Enum>
+  <Font Name="Segoe UI" Size="9" />
+</ClassDiagram>

@@ -2,6 +2,7 @@
 using System.Collections.Generic;
 using System.Drawing;
 using System.Linq;
+using System.Runtime.Serialization;
 using System.Text;
 using System.Threading.Tasks;
 
@@ -10,8 +11,21 @@ namespace Bomber.Model
 
     public class Player : Unit
     {
-        public event EventHandler? BombPlanted;
+        public class PlayerDeadException : Exception
+        {
+            public PlayerDeadException()
+            {
+            }
 
+            public PlayerDeadException(string? message) : base(message)
+            {
+            }
+
+            public PlayerDeadException(string? message, Exception? innerException) : base(message, innerException)
+            {
+            }
+
+        }
         public Player(Point startingPos) : base(startingPos)
         {
         }
@@ -21,19 +35,14 @@ namespace Bomber.Model
 
         }
 
-        public void PlantBomb()
+        public virtual Bomb PlantBomb(int timeTillExplosion, int radius)
         {
             if (!Alive)
             {
-                return;
+                throw new PlayerDeadException();
             }
-            BombPlanted?.Invoke(this, EventArgs.Empty);
+            return new Bomb(Position, timeTillExplosion, radius);
         }
 
-        public override void Dispose()
-        {
-            base.Dispose();
-            BombPlanted = null;
-        }
     }
 }

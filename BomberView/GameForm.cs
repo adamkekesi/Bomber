@@ -11,8 +11,6 @@ namespace BomberView
 
         private const int cellSize = 30;
 
-        private Panel? container;
-
         private Cell[,]? cells;
 
         public GameForm()
@@ -48,16 +46,59 @@ namespace BomberView
 
         private void StartGame()
         {
+            if (game == null)
+            {
+                return;
+            }
             InitMap();
             scoreBoard.Visible = true;
             game.TimeElapsed += OnTimeElapsed;
             game.StatUpdated += OnStatUpdated;
-            
+            game.Bombs.BombsChanged += OnBombsChanged;
             game.Map.MapChanged += OnMapChanged;
+            game.GameOver += OnGameOver;
+            scoreBoard.BringToFront();
+        }
+
+        private void OnGameOver(object? sender, EventArgs e)
+        {
+            if (game == null)
+            {
+                return;
+            }
+            BeginInvoke(() =>
+            {
+                MessageBox.Show(game.Won ? "You won!" : "Game over!",
+                       "End", MessageBoxButtons.OK, MessageBoxIcon.Information);
+            });
+            game.Dispose();
+        }
+
+        private void OnBombsChanged(object? sender, BombCollection.BombsChangedEventArgs e)
+        {
+            if (game == null || cells == null)
+            {
+                return;
+            }
+            BeginInvoke(() =>
+            {
+                if (e.Change == BombCollection.ChangeType.Added)
+                {
+                    cells[e.Bomb.Position.X, e.Bomb.Position.Y].ShowBomb();
+                }
+                else
+                {
+                    cells[e.Bomb.Position.X, e.Bomb.Position.Y].HideBomb();
+                }
+            });
         }
 
         private void OnStatUpdated(object? sender, EventArgs e)
         {
+            if (game == null)
+            {
+                return;
+            }
             BeginInvoke(() =>
             {
                 enemiesKilledLabel.Text = game.EnemiesKilled.ToString();
@@ -66,6 +107,10 @@ namespace BomberView
 
         private void OnTimeElapsed(object? sender, EventArgs e)
         {
+            if (game == null)
+            {
+                return;
+            }
             BeginInvoke(() =>
             {
                 timeElapsedLabel.Text = game.Time.ToString(@"hh\:mm\:ss");
@@ -74,14 +119,18 @@ namespace BomberView
 
         private void OnMapChanged(object? sender, Map.MapChangedEventArgs e)
         {
+            if (game == null || cells == null)
+            {
+                return;
+            }
             BeginInvoke(() =>
             {
-                container.SuspendLayout();
+                gameContainer.SuspendLayout();
                 foreach (var p in e.AffectedCells)
                 {
                     cells[p.X, p.Y].ReplaceField(game.Map[p]);
                 }
-                container.ResumeLayout();
+                gameContainer.ResumeLayout();
             });
         }
 
@@ -92,18 +141,13 @@ namespace BomberView
                 return;
             }
 
+            gameContainer.Controls.Clear();
+
             int n = game.Map.Size;
-            int size = n * cellSize;
-            container = new Panel()
-            {
-                Size = new Size(size, size),
-                Location = new Point(20, 60)
-            };
-            Controls.Add(container);
 
             cells = new Cell[n, n];
 
-            container.SuspendLayout();
+            gameContainer.SuspendLayout();
 
             for (int i = 0; i < n; i++)
             {
@@ -112,15 +156,19 @@ namespace BomberView
                     var field = game.Map[i, j];
                     var cell = new Cell(field) { Size = new Size(cellSize, cellSize), Location = new Point(i * cellSize, j * cellSize) };
                     cells[i, j] = cell;
-                    container.Controls.Add(cell);
+                    gameContainer.Controls.Add(cell);
                 }
             }
 
-            container.ResumeLayout();
+            gameContainer.ResumeLayout();
         }
 
         private void startPauseButton_Click(object sender, EventArgs e)
         {
+            if (game == null)
+            {
+                return;
+            }
             if (game.Paused)
             {
                 game.Resume();
@@ -135,6 +183,10 @@ namespace BomberView
 
         private void GameForm_KeyPress(object sender, KeyPressEventArgs e)
         {
+            if (game == null)
+            {
+                return;
+            }
             switch (e.KeyChar)
             {
                 case 'w':

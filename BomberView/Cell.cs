@@ -15,13 +15,17 @@ namespace BomberView
     {
         private IField? field;
 
-        private Bomb? bomb;
-
         public Cell(IField? field)
         {
             InitializeComponent();
             this.field = field;
             DrawField(field);
+            bombContainer.SendToBack();
+            /*enemy.SendToBack();
+            wall.SendToBack();
+            player.SendToBack();*/
+
+
         }
 
         public void ReplaceField(IField? field)
@@ -30,9 +34,14 @@ namespace BomberView
             DrawField(field);
         }
 
-        public void PlantBomb(Bomb bomb)
+        public void ShowBomb()
         {
-            this.bomb = bomb;
+            bombContainer.Visible = true;
+        }
+
+        public void HideBomb()
+        {
+            bombContainer.Visible = false;
         }
 
         private void DrawField(Player p)
@@ -55,7 +64,7 @@ namespace BomberView
             wall.Visible = false;
             player.Visible = false;
 
-            
+
         }
 
         private void DrawField(IField? f)

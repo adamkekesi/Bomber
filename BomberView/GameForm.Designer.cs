@@ -37,6 +37,7 @@
             timeElapsedLabel = new Label();
             label2 = new Label();
             label1 = new Label();
+            gameContainer = new Panel();
             menuStrip.SuspendLayout();
             scoreBoard.SuspendLayout();
             SuspendLayout();
@@ -47,8 +48,8 @@
             menuStrip.Items.AddRange(new ToolStripItem[] { fileMenu });
             menuStrip.Location = new Point(0, 0);
             menuStrip.Name = "menuStrip";
-            menuStrip.Padding = new Padding(5, 2, 0, 2);
-            menuStrip.Size = new Size(772, 24);
+            menuStrip.Padding = new Padding(6, 3, 0, 3);
+            menuStrip.Size = new Size(882, 30);
             menuStrip.TabIndex = 0;
             menuStrip.Text = "menuStrip1";
             // 
@@ -56,13 +57,13 @@
             // 
             fileMenu.DropDownItems.AddRange(new ToolStripItem[] { openFileDialogMenuItem });
             fileMenu.Name = "fileMenu";
-            fileMenu.Size = new Size(37, 20);
+            fileMenu.Size = new Size(46, 24);
             fileMenu.Text = "File";
             // 
             // openFileDialogMenuItem
             // 
             openFileDialogMenuItem.Name = "openFileDialogMenuItem";
-            openFileDialogMenuItem.Size = new Size(174, 22);
+            openFileDialogMenuItem.Size = new Size(217, 26);
             openFileDialogMenuItem.Text = "Choose game map";
             // 
             // scoreBoard
@@ -72,18 +73,18 @@
             scoreBoard.Controls.Add(timeElapsedLabel);
             scoreBoard.Controls.Add(label2);
             scoreBoard.Controls.Add(label1);
-            scoreBoard.Location = new Point(542, 538);
-            scoreBoard.Margin = new Padding(3, 2, 3, 2);
+            scoreBoard.Location = new Point(619, 717);
             scoreBoard.Name = "scoreBoard";
-            scoreBoard.Size = new Size(219, 93);
+            scoreBoard.Size = new Size(250, 124);
             scoreBoard.TabIndex = 2;
             scoreBoard.Visible = false;
             // 
             // startPauseButton
             // 
-            startPauseButton.Location = new Point(16, 59);
+            startPauseButton.Location = new Point(18, 79);
+            startPauseButton.Margin = new Padding(3, 4, 3, 4);
             startPauseButton.Name = "startPauseButton";
-            startPauseButton.Size = new Size(75, 23);
+            startPauseButton.Size = new Size(86, 31);
             startPauseButton.TabIndex = 4;
             startPauseButton.Text = "Pause";
             startPauseButton.UseVisualStyleBackColor = true;
@@ -92,48 +93,57 @@
             // enemiesKilledLabel
             // 
             enemiesKilledLabel.AutoSize = true;
-            enemiesKilledLabel.Location = new Point(117, 37);
+            enemiesKilledLabel.Location = new Point(134, 49);
             enemiesKilledLabel.Name = "enemiesKilledLabel";
-            enemiesKilledLabel.Size = new Size(13, 15);
+            enemiesKilledLabel.Size = new Size(17, 20);
             enemiesKilledLabel.TabIndex = 3;
             enemiesKilledLabel.Text = "0";
             // 
             // timeElapsedLabel
             // 
             timeElapsedLabel.AutoSize = true;
-            timeElapsedLabel.Location = new Point(117, 21);
+            timeElapsedLabel.Location = new Point(134, 28);
             timeElapsedLabel.Name = "timeElapsedLabel";
-            timeElapsedLabel.Size = new Size(0, 15);
+            timeElapsedLabel.Size = new Size(0, 20);
             timeElapsedLabel.TabIndex = 2;
             // 
             // label2
             // 
             label2.AutoSize = true;
-            label2.Location = new Point(16, 37);
+            label2.Location = new Point(18, 49);
             label2.Name = "label2";
-            label2.Size = new Size(88, 15);
+            label2.Size = new Size(111, 20);
             label2.TabIndex = 1;
             label2.Text = "Enemies killed: ";
             // 
             // label1
             // 
             label1.AutoSize = true;
-            label1.Location = new Point(16, 14);
+            label1.Location = new Point(18, 19);
             label1.Name = "label1";
-            label1.Size = new Size(39, 15);
+            label1.Size = new Size(49, 20);
             label1.TabIndex = 0;
             label1.Text = "Time: ";
             // 
+            // gameContainer
+            // 
+            gameContainer.Dock = DockStyle.Fill;
+            gameContainer.Location = new Point(0, 30);
+            gameContainer.Name = "gameContainer";
+            gameContainer.Size = new Size(882, 823);
+            gameContainer.TabIndex = 3;
+            // 
             // GameForm
             // 
-            AutoScaleDimensions = new SizeF(7F, 15F);
+            AutoScaleDimensions = new SizeF(8F, 20F);
             AutoScaleMode = AutoScaleMode.Font;
-            ClientSize = new Size(772, 640);
+            ClientSize = new Size(882, 853);
+            Controls.Add(gameContainer);
             Controls.Add(scoreBoard);
             Controls.Add(menuStrip);
             FormBorderStyle = FormBorderStyle.FixedSingle;
+            KeyPreview = true;
             MainMenuStrip = menuStrip;
-            Margin = new Padding(3, 2, 3, 2);
             MaximizeBox = false;
             Name = "GameForm";
             Text = "Bomber";
@@ -157,5 +167,6 @@
         private Label enemiesKilledLabel;
         private Label timeElapsedLabel;
         private Button startPauseButton;
+        private Panel gameContainer;
     }
 }

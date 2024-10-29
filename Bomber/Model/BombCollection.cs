@@ -6,18 +6,29 @@ using System.Threading.Tasks;
 
 namespace Bomber.Model
 {
-    public class BombCollection:IDisposable
-    { 
-        public class BombsChangedEventArgs
+    public class BombCollection : IDisposable
+    {
+        public enum ChangeType
         {
-            public Act MyProperty { get; private set; }
+            Added,
+            Removed
         }
 
-        private const int bombExplodeTime = 2000;
+        public class BombsChangedEventArgs
+        {
+            public ChangeType Change { get; private set; }
 
-        private const int bombRadius = 3;
+            public Bomb Bomb { get; private set; }
 
-        public event EventHandler<Map.MapChangedEventArgs>? BombsChanged;
+            public BombsChangedEventArgs(ChangeType change, Bomb bomb)
+            {
+                Change = change;
+                Bomb = bomb;
+            }
+        }
+
+
+        public event EventHandler<BombsChangedEventArgs>? BombsChanged;
 
         private readonly List<Bomb> bombs;
 
@@ -26,17 +37,34 @@ namespace Bomber.Model
             bombs = new List<Bomb>();
         }
 
-        public void PlantBomb(Bomb bomb)
+        public BombCollection(List<Bomb> list)
+        {
+            bombs = list;
+        }
+
+        public virtual void PlantBomb(Bomb bomb)
         {
             bombs.Add(bomb);
+            bomb.Exploded += OnBombExploded;
+            BombsChanged?.Invoke(this, new BombsChangedEventArgs(ChangeType.Added, bomb));
         }
 
-        public void RemoveBomb(Bomb bomb) 
+        private void OnBombExploded(object? sender, EventArgs e)
+        {
+            if (sender is Bomb bomb)
+            {
+                Remove(bomb);
+            }
+        }
+
+        public virtual void Remove(Bomb bomb)
         {
             bombs.Remove(bomb);
+            bomb.Dispose();
+            BombsChanged?.Invoke(this, new BombsChangedEventArgs(ChangeType.Removed, bomb));
         }
 
-        public void Pause() 
+        public virtual void Pause()
         {
             foreach (var bomb in bombs)
             {
@@ -54,8 +82,7 @@ namespace Bomber.Model
 
         public void Dispose()
         {
-            BombAdded = null;
-            BombRemoved = null;
+            BombsChanged = null;
             foreach (var bomb in bombs)
             {
                 bomb.Dispose();

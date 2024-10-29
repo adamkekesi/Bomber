@@ -13,13 +13,17 @@ namespace Bomber.Model
 
         public Point Position { get; private set; }
 
+        public int Radius { get; private set; }
+
         private System.Timers.Timer timer;
 
-        public Bomb(Point position, int timeTillExplosion)
+        public Bomb(Point position, int timeTillExplosion, int radius)
         {
             Position = position;
             timer = new System.Timers.Timer(timeTillExplosion) { AutoReset = false };
+            timer.Start();
             timer.Elapsed += OnTimeElapsed;
+            Radius = radius;
         }
 
         private void OnTimeElapsed(object? sender, System.Timers.ElapsedEventArgs e)
@@ -27,17 +31,17 @@ namespace Bomber.Model
             Exploded?.Invoke(this, e);
         }
 
-        public void Pause()
+        public virtual void Pause()
         {
             timer.Stop();
         }
 
-        public void Resume()
+        public virtual void Resume()
         {
             timer.Start();
         }
 
-        public void Dispose()
+        public virtual void Dispose()
         {
             timer.Stop();
             timer.Dispose();

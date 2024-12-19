@@ -1,0 +1,46 @@
+@startuml
+class GameForm {
+    + GameForm()
+    --methods--
+    - OnOpenFileDialogClicked(sender: Object, e: EventArgs)
+    - StartGame()
+    - OnGameOver(sender: Object, e: EventArgs)
+    - OnBombsChanged(sender: Object, e: BombCollection.BombsChangedEventArgs)
+    - OnStatUpdated(sender: Object, e: EventArgs)
+    - OnTimeElapsed(sender: Object, e: EventArgs)
+    - OnMapChanged(sender: Object, e: Map.MapChangedEventArgs)
+    - InitMap()
+    - GameForm_KeyPress(sender: Object, e: KeyPressEventArgs)
+}
+
+class MapLoader {
+    - _path: string
+    + MapLoader(path: string)
+    + LoadAsync() : Task<CellContent[,]>
+}
+
+
+class Cell {
+    + Cell(field: IField?)
+    + ReplaceField(field: IField?)
+    + ShowBomb()
+    + HideBomb()
+    - DrawField(p: Player)
+    - DrawField(w: Wall)
+    - DrawField(e: Enemy)
+    - DrawField(f: IField?)
+}
+
+class BomberModel{
+
+}
+
+interface IField{
+
+}
+
+GameForm .. MapLoader: instantiates >
+GameForm o.. "0..1\n-model" BomberModel
+Cell -- "0..1\n-field"IField: displays >
+GameForm o.. "nxn\n-cells" Cell
+@enduml

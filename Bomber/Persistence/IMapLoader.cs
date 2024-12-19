@@ -8,6 +8,7 @@ namespace Bomber.Persistence
 {
     public interface IMapLoader
     {
-        public CellContent[,] Load();
+        public Task<CellContent[,]> LoadAsync();
+
     }
 }

@@ -8,7 +8,7 @@ using System.Threading.Tasks;
 
 namespace Bomber.Model
 {
-    public class Map : IDisposable
+    public class Map :  IMap
     {
         public class OutOfMapException : Exception
         {
@@ -40,9 +40,8 @@ namespace Bomber.Model
 
         private readonly IField?[,] fields;
 
-        public Map(CellContent[,] cells, Player player, Random r, out List<Enemy> enemies)
+        public Map(CellContent[,] cells, Random r, out List<Enemy> enemies)
         {
-
             int n = cells.GetLength(0);
             enemies = new List<Enemy>();
             fields = new IField[n, n];
@@ -53,7 +52,7 @@ namespace Bomber.Model
                     switch (cells[i, j])
                     {
                         case CellContent.Enemy:
-                            Enemy enemy = new Enemy(r, new Point(i, j));
+                            Enemy enemy = new Enemy(r, this, new Point(i, j));
                             fields[i, j] = enemy;
                             enemies.Add(enemy);
 
@@ -71,6 +70,10 @@ namespace Bomber.Model
                     }
                 }
             }
+        }
+
+        public void PlacePlayer(Player player)
+        {
             fields[0, 0] = player;
         }
 
@@ -101,41 +104,44 @@ namespace Bomber.Model
 
         public virtual void Move(Point pos, Direction dir)
         {
-            if (IsPointOutOfMap(pos))
+            lock (this)
             {
-                throw new OutOfMapException(pos);
+                if (IsPointOutOfMap(pos))
+                {
+                    throw new OutOfMapException(pos);
+                }
+
+                var field = fields[pos.X, pos.Y];
+                if (field == null)
+                {
+                    return;
+                }
+
+                Point newPos = GetNewPos(pos, dir);
+
+                if (IsPointOutOfMap(newPos))
+                {
+                    HandleCollision(field, new Wall(), newPos);
+                    return;
+                }
+
+                var targetField = fields[newPos.X, newPos.Y];
+
+                if (targetField != null)
+                {
+                    HandleCollision(field, targetField, newPos);
+                    return;
+                }
+
+                if (field is Unit unit)
+                {
+                    unit.Position = newPos;
+                }
+                fields[pos.X, pos.Y] = null;
+                fields[newPos.X, newPos.Y] = field;
+
+                MapChanged?.Invoke(this, new MapChangedEventArgs(pos, newPos));
             }
-
-            var field = fields[pos.X, pos.Y];
-            if (field == null)
-            {
-                return;
-            }
-
-            Point newPos = GetNewPos(pos, dir);
-
-            if (IsPointOutOfMap(newPos))
-            {
-                HandleCollision(field, new Wall(), newPos);
-                return;
-            }
-
-            var targetField = fields[newPos.X, newPos.Y];
-
-            if (targetField != null)
-            {
-                HandleCollision(field, targetField, newPos);
-                return;
-            }
-
-            if (field is Unit unit)
-            {
-                unit.Position = newPos;
-            }
-            fields[pos.X, pos.Y] = null;
-            fields[newPos.X, newPos.Y] = field;
-
-            MapChanged?.Invoke(this, new MapChangedEventArgs(pos, newPos));
         }
 
         public void ForEachInArea(Point origin, int radius, Action<IField> action)
@@ -168,10 +174,11 @@ namespace Bomber.Model
 
         private void HandleCollision(IField field, IField targetField, Point newPos)
         {
+                targetField.OnCollision(field, newPos);
+                field.OnCollision(targetField, newPos);
             Exception? ex = null;
             try
             {
-                targetField.OnCollision(field, newPos);
 
             }
             catch (Exception e)
@@ -181,7 +188,6 @@ namespace Bomber.Model
 
             try
             {
-                field.OnCollision(targetField, newPos);
             }
             catch (Exception e)
             {

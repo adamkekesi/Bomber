@@ -32,7 +32,6 @@
             fileMenu = new ToolStripMenuItem();
             openFileDialogMenuItem = new ToolStripMenuItem();
             scoreBoard = new Panel();
-            startPauseButton = new Button();
             enemiesKilledLabel = new Label();
             timeElapsedLabel = new Label();
             label2 = new Label();
@@ -68,7 +67,6 @@
             // 
             // scoreBoard
             // 
-            scoreBoard.Controls.Add(startPauseButton);
             scoreBoard.Controls.Add(enemiesKilledLabel);
             scoreBoard.Controls.Add(timeElapsedLabel);
             scoreBoard.Controls.Add(label2);
@@ -78,17 +76,7 @@
             scoreBoard.Size = new Size(250, 124);
             scoreBoard.TabIndex = 2;
             scoreBoard.Visible = false;
-            // 
-            // startPauseButton
-            // 
-            startPauseButton.Location = new Point(18, 79);
-            startPauseButton.Margin = new Padding(3, 4, 3, 4);
-            startPauseButton.Name = "startPauseButton";
-            startPauseButton.Size = new Size(86, 31);
-            startPauseButton.TabIndex = 4;
-            startPauseButton.Text = "Pause";
-            startPauseButton.UseVisualStyleBackColor = true;
-            startPauseButton.Click += startPauseButton_Click;
+           
             // 
             // enemiesKilledLabel
             // 
@@ -166,7 +154,6 @@
         private Label label1;
         private Label enemiesKilledLabel;
         private Label timeElapsedLabel;
-        private Button startPauseButton;
         private Panel gameContainer;
     }
 }

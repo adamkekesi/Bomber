@@ -15,7 +15,7 @@ namespace BomberTest
         [TestMethod]
         public void TestMove()
         {
-            Mock<Enemy> mock = new Mock<Enemy>(new Random(), new Point(0, 0)) { CallBase = true };
+            Mock<Enemy> mock = new Mock<Enemy>(new Random(), MockMap().Object, new Point(0, 0)) { CallBase = true };
 
             mock.Setup(m => m.Move(It.IsAny<Direction>()));
 
@@ -27,8 +27,9 @@ namespace BomberTest
         [TestMethod]
         public void TestCollisionWithPlayer()
         {
-            Enemy enemy = new Enemy(new Random(), new Point(0, 0));
-            Mock<Player> mock = new Mock<Player>(new Point(0, 0));
+            IMap map = MockMap().Object;
+            Enemy enemy = new Enemy(new Random(), map, new Point(0, 0));
+            Mock<Player> mock = new Mock<Player>(map,new Point(0, 0));
 
             mock.Setup(m => m.Kill());
 
@@ -40,11 +41,20 @@ namespace BomberTest
         [TestMethod]
         public void TestCollisionWithWall()
         {
-            Enemy enemy = new Enemy(new Random(), new Point(0, 0));
+            Enemy enemy = new Enemy(new Random(), MockMap().Object, new Point(0, 0));
 
             enemy.OnCollision(new Wall(), new Point(0, 0));
 
             Assert.AreNotEqual(Direction.Up, enemy.Orientation);
+        }
+
+        private Mock<IMap> MockMap()
+        {
+            Mock<IMap> mock = new Mock<IMap>();
+            mock.Setup(m => m.ForEachInArea(It.IsAny<Point>(), It.IsAny<int>(), It.IsAny<Action<IField>>()));
+            mock.Setup(m => m.Move(It.IsAny<Point>(), It.IsAny<Direction>()));
+            mock.Setup(m => m.RemoveField(It.IsAny<Point>()));
+            return mock;
         }
     }
 }

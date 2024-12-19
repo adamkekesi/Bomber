@@ -1,0 +1,18 @@
+@startuml
+enum CellContent {
+    Enemy
+    Wall
+    Empty
+}
+interface IMapLoader {
+    + LoadAsync() : Task<CellContent[,]>
+}
+
+class MapLoader {
+    - _path: string
+    + MapLoader(path: string)
+    + LoadAsync() : Task<CellContent[,]>
+}
+
+MapLoader -up-|>IMapLoader
+@enduml

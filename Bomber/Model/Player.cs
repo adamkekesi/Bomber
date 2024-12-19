@@ -2,6 +2,7 @@
 using System.Collections.Generic;
 using System.Drawing;
 using System.Linq;
+using System.Numerics;
 using System.Runtime.Serialization;
 using System.Text;
 using System.Threading.Tasks;
@@ -26,7 +27,7 @@ namespace Bomber.Model
             }
 
         }
-        public Player(Point startingPos) : base(startingPos)
+        public Player(IMap map, Point startingPos ) : base(startingPos, map)
         {
         }
 
@@ -43,6 +44,5 @@ namespace Bomber.Model
             }
             return new Bomb(Position, timeTillExplosion, radius);
         }
-
     }
 }

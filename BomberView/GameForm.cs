@@ -7,7 +7,7 @@ namespace BomberView
 {
     public partial class GameForm : Form
     {
-        private Game? game;
+        private BomberModel? game;
 
         private const int cellSize = 30;
 
@@ -19,18 +19,19 @@ namespace BomberView
             openFileDialogMenuItem.Click += OnOpenFileDialogClicked;
         }
 
-        private void OnOpenFileDialogClicked(object? sender, EventArgs e)
+        private async void OnOpenFileDialogClicked(object? sender, EventArgs e)
         {
             using (OpenFileDialog openFileDialog = new OpenFileDialog())
             {
                 openFileDialog.InitialDirectory = "C:\\";
                 openFileDialog.Filter = "txt files (*.txt)|*.txt";
                 openFileDialog.RestoreDirectory = true;
+                
                 if (openFileDialog.ShowDialog() == DialogResult.OK)
                 {
                     try
                     {
-                        game = new Game(new MapLoader(openFileDialog.FileName));
+                        game = new BomberModel(await new MapLoader(openFileDialog.FileName).LoadAsync());
                         StartGame();
 
                     }
@@ -163,24 +164,6 @@ namespace BomberView
             gameContainer.ResumeLayout();
         }
 
-        private void startPauseButton_Click(object sender, EventArgs e)
-        {
-            if (game == null)
-            {
-                return;
-            }
-            if (game.Paused)
-            {
-                game.Resume();
-                startPauseButton.Text = "Pause";
-            }
-            else
-            {
-                game.Pause();
-                startPauseButton.Text = "Resume";
-            }
-        }
-
         private void GameForm_KeyPress(object sender, KeyPressEventArgs e)
         {
             if (game == null)
@@ -210,6 +193,10 @@ namespace BomberView
 
                 case ' ':
                     game.PlantBomb();
+                    break;
+
+                case 'c':
+                    game.PauseToggle();
                     break;
 
                 default:

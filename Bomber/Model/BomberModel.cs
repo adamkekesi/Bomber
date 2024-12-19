@@ -8,7 +8,7 @@ using System.Timers;
 
 namespace Bomber.Model
 {
-    public class Game : IDisposable
+    public class BomberModel : IDisposable
     {
         private const int enemyStepInterval = 1400;
 
@@ -52,11 +52,11 @@ namespace Bomber.Model
             }
         }
 
-        public Map Map => map;
+        public IMap Map => map;
 
         public BombCollection Bombs => bombs;
 
-        private readonly Map map;
+        private readonly IMap map;
 
         private readonly Player player;
 
@@ -74,7 +74,7 @@ namespace Bomber.Model
 
         private TimeSpan time = TimeSpan.Zero;
 
-        public Game(IMapLoader mapLoader)
+        public BomberModel(CellContent[,] cells)
         {
             r = new Random();
             enemyStepScheduler = new System.Timers.Timer(enemyStepInterval);
@@ -85,21 +85,21 @@ namespace Bomber.Model
             timer.Elapsed += OnTick;
             timer.Start();
 
-            player = new Player(new Point(0, 0));
+            map = new Map(cells, r, out enemies);
+            player = new Player(map, new Point(0, 0));
             player.Died += OnPlayerDied;
-            player.Moved += OnUnitMoved;
 
-            bombs = new BombCollection();
+            map.PlacePlayer(player);
 
-            map = new Map(mapLoader.Load(), player, r, out enemies);
+            bombs = new BombCollection(map);
+
             foreach (var enemy in enemies)
             {
-                enemy.Moved += OnUnitMoved;
                 enemy.Died += OnEnemyDied;
             }
         }
 
-        public Game(Player player, Map map, List<Enemy> enemies, BombCollection bombs)
+        public BomberModel(Player player, IMap map, List<Enemy> enemies, BombCollection bombs)
         {
             r = new Random();
             enemyStepScheduler = new System.Timers.Timer(enemyStepInterval);
@@ -112,7 +112,6 @@ namespace Bomber.Model
 
             this.player = player;
             player.Died += OnPlayerDied;
-            player.Moved += OnUnitMoved;
 
             this.bombs = bombs;
 
@@ -121,7 +120,6 @@ namespace Bomber.Model
             this.map = map;
             foreach (var enemy in enemies)
             {
-                enemy.Moved += OnUnitMoved;
                 enemy.Died += OnEnemyDied;
             }
         }
@@ -142,11 +140,26 @@ namespace Bomber.Model
                 return;
             }
             Bomb bomb = player.PlantBomb(bombExplodeTime, bombRadius);
-            bomb.Exploded += OnBombExploded;
             bombs.PlantBomb(bomb);
         }
 
-        public void Pause()
+        public void PauseToggle()
+        {
+            if (IsGameOver)
+            {
+                return;
+            }
+            if (Paused)
+            {
+                Resume();
+            }
+            else
+            {
+                Pause();
+            }
+        }
+
+        private void Pause()
         {
             Paused = true;
             enemyStepScheduler.Stop();
@@ -154,30 +167,12 @@ namespace Bomber.Model
             bombs.Pause();
         }
 
-        public void Resume()
+        private void Resume()
         {
-            if (IsGameOver)
-            {
-                return;
-            }
             Paused = false;
             enemyStepScheduler.Start();
             timer.Start();
             bombs.Resume();
-        }
-
-        private void OnBombExploded(object? sender, EventArgs e)
-        {
-            if (sender is Bomb bomb)
-            {
-                map.ForEachInArea(bomb.Position, bombRadius, (field) =>
-                {
-                    if (field is Unit unit)
-                    {
-                        unit.Kill();
-                    }
-                });
-            }
         }
 
         private void OnEnemyStepSchedulerTick(object? sender, ElapsedEventArgs e)
@@ -192,27 +187,18 @@ namespace Bomber.Model
         {
             if (sender is Enemy enemy)
             {
-                map.RemoveField(enemy.Position);
-                enemy.Dispose();
                 EnemiesKilled++;
                 enemies.Remove(enemy);
                 if (enemies.Count == 0)
                 {
-                    GameOver?.Invoke(this, EventArgs.Empty);
+                    OnGameOver();
                 }
             }
 
         }
 
-        private void OnUnitMoved(object? sender, Unit.MovedEventArgs e)
-        {
-            map.Move(e.CurrentPos, e.Direction);
-        }
-
         private void OnPlayerDied(object? sender, EventArgs e)
         {
-            map.RemoveField(player.Position);
-            player.Dispose();
             OnGameOver();
         }
 

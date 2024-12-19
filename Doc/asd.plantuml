@@ -1,0 +1,71 @@
+@startuml
+
+
+
+
+enum Direction {
+    Up
+    Down
+    Left
+    Right
+}
+
+
+
+
+class BomberModel {
+    - enemiesKilled: int
+    - time: TimeSpan
+
+    - map: IMap
+    - player: Player
+    - enemies: List<Enemy>
+    - bombs: BombCollection
+    
+    - r: Random
+    - enemyStepScheduler: System.Timers.Timer
+    - timer: System.Timers.Timer
+
+    
+    + BomberModel(cells: CellContent[,])
+    + BomberModel(player: Player, map: IMap, enemies: List<Enemy>, bombs: BombCollection)
+    --methods--
+    + PlayerStep(dir: Direction)
+    + PlantBomb()
+    + PauseToggle()
+    - Pause()
+    - Resume()
+    - OnEnemyStepSchedulerTick(sender: object?, e: ElapsedEventArgs)
+    - OnEnemyDied(sender: object?, e: EventArgs)
+    - OnPlayerDied(sender: object?, e: EventArgs)
+    - OnGameOver()
+    - OnTick(sender: object?, e: ElapsedEventArgs)
+    - Dispose()
+    ---properties--
+    + Won(): bool
+    + EnemiesKilled(): int
+    + Time(): TimeSpan
+    + Map(): IMap
+    + Bombs(): BombCollection
+    --events--
+    + GameOver(): EventHandler?
+    + StatUpdated(): EventHandler?
+    + TimeElapsed(): EventHandler?
+}
+
+BomberModel -|> IDisposable
+
+BombCollection -|> IDisposable
+BombsChangedEventArgs -- "-bomb" Bomb
+BombCollection .. BombsChangedEventArgs
+BombCollection *-- "*\n-bombs" Bomb
+BombCollection -- "-map" IMap: kills it's units >
+
+Bomb -|> IDisposable
+
+
+
+
+
+
+@enduml

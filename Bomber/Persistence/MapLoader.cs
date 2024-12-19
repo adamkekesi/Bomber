@@ -15,9 +15,9 @@ namespace Bomber.Persistence
             _path = path;
         }
 
-        public CellContent[,] Load()
+        public async Task<CellContent[,]> LoadAsync()
         {
-            string[] lines = File.ReadAllLines(_path);
+            string[] lines = await File.ReadAllLinesAsync(_path);
             int mapSize = lines.Length;
             CellContent[,] matrix = new CellContent[mapSize, mapSize];
 

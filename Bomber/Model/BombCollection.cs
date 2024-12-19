@@ -32,14 +32,18 @@ namespace Bomber.Model
 
         private readonly List<Bomb> bombs;
 
-        public BombCollection()
+        private readonly IMap map;
+
+        public BombCollection(IMap map)
         {
             bombs = new List<Bomb>();
+            this.map = map;
         }
 
-        public BombCollection(List<Bomb> list)
+        public BombCollection(List<Bomb> list, IMap map)
         {
             bombs = list;
+            this.map = map;
         }
 
         public virtual void PlantBomb(Bomb bomb)
@@ -54,6 +58,13 @@ namespace Bomber.Model
             if (sender is Bomb bomb)
             {
                 Remove(bomb);
+                map.ForEachInArea(bomb.Position, bomb.Radius, (field) =>
+                {
+                    if (field is Unit unit)
+                    {
+                        unit.Kill();
+                    }
+                });
             }
         }
 

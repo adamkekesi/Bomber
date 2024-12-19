@@ -1,0 +1,50 @@
+@startuml
+class BomberModel {
+    - enemiesKilled: int
+    - time: TimeSpan
+    - r: Random
+    - enemyStepScheduler: System.Timers.Timer
+    - timer: System.Timers.Timer
+    + BomberModel(cells: CellContent[,])
+    + BomberModel(player: Player, map: IMap, enemies: List<Enemy>, bombs: BombCollection)
+    --methods--
+    + PlayerStep(dir: Direction)
+    + PlantBomb()
+    + PauseToggle()
+    - Pause()
+    - Resume()
+    - OnEnemyStepSchedulerTick(sender: object?, e: ElapsedEventArgs)
+    - OnEnemyDied(sender: object?, e: EventArgs)
+    - OnPlayerDied(sender: object?, e: EventArgs)
+    - OnGameOver()
+    - OnTick(sender: object?, e: ElapsedEventArgs)
+    - Dispose()
+    ---properties--
+    + Won(): bool
+    + EnemiesKilled(): int
+    + Time(): TimeSpan
+    + Map(): IMap
+    + Bombs(): BombCollection
+    --events--
+    + GameOver(): EventHandler?
+    + StatUpdated(): EventHandler?
+    + TimeElapsed(): EventHandler?
+}
+
+interface IMap{
+
+}
+
+class Player{
+
+}
+
+class Enemy{}
+
+class BombCollection{}
+
+BomberModel o... "1\n-map" IMap
+BomberModel o.. "1\n-player" Player
+BomberModel o.. "1..*\n-enemies" Enemy
+BomberModel o.. "1\n-bombs" BombCollection
+@enduml

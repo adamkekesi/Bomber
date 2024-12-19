@@ -7,7 +7,15 @@ Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "Bomber", "Bomber\Bomber.csp
 EndProject
 Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "BomberView", "BomberView\BomberView.csproj", "{DB0DE202-79C3-440C-9251-970D64915088}"
 EndProject
-Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "BomberTest", "BomberTest\BomberTest.csproj", "{90B442ED-6A25-411A-9775-C32270C58453}"
+Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "BomberTest", "BomberTest\BomberTest.csproj", "{90B442ED-6A25-411A-9775-C32270C58453}"
+EndProject
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "BomberViewWpf", "BomberViewWpf\BomberViewWpf.csproj", "{813EFCDF-9F1F-4E76-94DE-2DF877823451}"
+EndProject
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "BomberViewAvalonia", "BomberViewAvalonia\BomberViewAvalonia.csproj", "{DB358F7A-DDF6-4D90-BE4A-B63422E9B996}"
+EndProject
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "BomberViewAvalonia.Android", "BomberViewAvalonia.Android\BomberViewAvalonia.Android.csproj", "{9959001E-B011-45A6-9B48-F78BC7CEF16A}"
+EndProject
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "BomberViewAvalonia.Desktop", "BomberViewAvalonia.Desktop\BomberViewAvalonia.Desktop.csproj", "{7D658C67-AD80-4CBB-9A89-1891A2884C3C}"
 EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution
@@ -27,6 +35,24 @@ Global
 		{90B442ED-6A25-411A-9775-C32270C58453}.Debug|Any CPU.Build.0 = Debug|Any CPU
 		{90B442ED-6A25-411A-9775-C32270C58453}.Release|Any CPU.ActiveCfg = Release|Any CPU
 		{90B442ED-6A25-411A-9775-C32270C58453}.Release|Any CPU.Build.0 = Release|Any CPU
+		{813EFCDF-9F1F-4E76-94DE-2DF877823451}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{813EFCDF-9F1F-4E76-94DE-2DF877823451}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{813EFCDF-9F1F-4E76-94DE-2DF877823451}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{813EFCDF-9F1F-4E76-94DE-2DF877823451}.Release|Any CPU.Build.0 = Release|Any CPU
+		{DB358F7A-DDF6-4D90-BE4A-B63422E9B996}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{DB358F7A-DDF6-4D90-BE4A-B63422E9B996}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{DB358F7A-DDF6-4D90-BE4A-B63422E9B996}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{DB358F7A-DDF6-4D90-BE4A-B63422E9B996}.Release|Any CPU.Build.0 = Release|Any CPU
+		{9959001E-B011-45A6-9B48-F78BC7CEF16A}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{9959001E-B011-45A6-9B48-F78BC7CEF16A}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{9959001E-B011-45A6-9B48-F78BC7CEF16A}.Debug|Any CPU.Deploy.0 = Debug|Any CPU
+		{9959001E-B011-45A6-9B48-F78BC7CEF16A}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{9959001E-B011-45A6-9B48-F78BC7CEF16A}.Release|Any CPU.Build.0 = Release|Any CPU
+		{9959001E-B011-45A6-9B48-F78BC7CEF16A}.Release|Any CPU.Deploy.0 = Release|Any CPU
+		{7D658C67-AD80-4CBB-9A89-1891A2884C3C}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{7D658C67-AD80-4CBB-9A89-1891A2884C3C}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{7D658C67-AD80-4CBB-9A89-1891A2884C3C}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{7D658C67-AD80-4CBB-9A89-1891A2884C3C}.Release|Any CPU.Build.0 = Release|Any CPU
 	EndGlobalSection
 	GlobalSection(SolutionProperties) = preSolution
 		HideSolutionNode = FALSE

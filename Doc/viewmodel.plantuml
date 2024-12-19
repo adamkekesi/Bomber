@@ -1,0 +1,80 @@
+@startuml
+class DelegateCommand {
+    - _execute: Action<Object?>
+    - _canExecute: Func<Object?, Boolean>?
+    + DelegateCommand(execute: Action<Object?>)
+    + DelegateCommand(canExecute: Func<Object?, Boolean>?, execute: Action<Object?>)
+    + CanExecute(parameter: Object?): Boolean
+    + Execute(parameter: Object?)
+    + RaiseCanExecuteChanged()
+    --events--
+    + CanExecuteChanged(): EventHandler?
+}
+class ViewModelBase {
+    + OnPropertyChanged(propertyName: String?): void
+    --events--
+    + PropertyChanged(): PropertyChangedEventHandler?
+}
+
+class CellViewModel {
+    - bombPlaced: bool
+    + BombPlaced: bool
+    + PlayerVisible: bool
+    + EnemyVisible: bool
+    + WallVisible: bool
+    + X: int
+    + Y: int
+    + XY: Tuple<int, int>
+    --properties--
+    + Field(): IField?
+}
+
+class BomberViewModel {
+    --Fields--
+    - enemiesKilled: int
+    - time: TimeSpan
+    --Properties--
+    + EnemiesKilled(): int
+    + Time(): TimeSpan
+    + Cells(): ObservableCollection<CellViewModel>
+    + GameStarted(): bool
+    + MapSize(): int
+    --Events--
+    + LoadMap(): EventHandler?
+    + Move(): EventHandler<Direction>?
+    + PlantBomb(): EventHandler?
+    + PauseToggle(): EventHandler?
+    --Commands--
+    + MoveCommand(): DelegateCommand
+    + PlantBombCommand(): DelegateCommand
+    + PauseToggleCommand(): DelegateCommand
+    + LoadMapCommand(): DelegateCommand
+    --Methods--
+    + StartGame(model: BomberModel)
+    --Event handlers--
+    - OnTimeElapsed(sender: EventArgs)
+    - OnStatUpdated(sender: EventArgs)
+    - OnMapChanged(sender: Map.MapChangedEventArgs)
+    - OnGameOver(sender: EventArgs)
+    - OnBombsChanged(sender: BombCollection.BombsChangedEventArgs)
+    --Event methods--
+    - OnLoadMap()
+    - OnMove(param: Object?)
+    - OnPlantBomb(param: Object?)
+    - OnPauseToggle(param: Object?)
+}
+
+interface IField{
+
+}
+CellViewModel -up-|> ViewModelBase
+CellViewModel -- "0..1\n-field" IField
+BomberViewModel -- "0..1\n-model" BomberModel
+
+class BomberModel{
+
+}
+
+BomberViewModel o-- "nxn\n+Cells" CellViewModel
+BomberViewModel -- DelegateCommand
+@enduml

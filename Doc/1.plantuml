@@ -1,0 +1,61 @@
+@startuml
+
+enum Direction {
+    Up
+    Down
+    Left
+    Right
+}
+
+abstract class Unit {
+    # Unit(startingPos: Point, map: IMap)
+    --methods--
+    + Move(dir: Direction)
+    + Kill()
+    + Dispose()
+    + {abstract} OnCollision(otherField: IField, point: Point)
+    # OnDied()
+    --properties--
+    + Position(): Point 
+    + Alive(): bool
+    --events--
+    + Died(): EventHandler?
+}
+
+interface IDisposable {
+    + Dispose()
+}
+
+interface IField {
+    + OnCollision(otherField: IField, point: Point)
+}
+
+class Player {
+    + Player(map: IMap, startingPos: Point)
+    --methods--
+    + OnCollision(otherField: IField, point: Point)
+    + PlantBomb(timeTillExplosion: int, radius: int): Bomb
+}
+
+class Enemy {
+    - r: Random
+    + Enemy(r: Random, map: IMap, startingPos: Point)
+    --methods--
+    + Move()
+    + OnCollision(otherField: IField, pos: Point)
+    --properties--
+    + Orientation(): Direction
+}
+
+class Wall {
+    + OnCollision(otherField: IField, point: Point)
+}
+Wall -up-|> IField
+
+Enemy --up-|> Unit
+
+Player --up-|> Unit
+
+Unit -up-|> IDisposable
+Unit -up-|> IField
+@enduml

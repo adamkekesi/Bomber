@@ -1,0 +1,53 @@
+<UserControl xmlns="https://github.com/avaloniaui"
+             xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
+             xmlns:d="http://schemas.microsoft.com/expression/blend/2008"
+             xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
+             xmlns:vm="clr-namespace:BomberViewAvalonia.ViewModels"
+             mc:Ignorable="d" d:DesignWidth="800" d:DesignHeight="450"
+             x:Class="BomberViewAvalonia.Views.MainView"
+             x:DataType="vm:MainViewModel">
+  <Design.DataContext>
+  </Design.DataContext>
+	<Grid>
+		<Grid.RowDefinitions>
+			<RowDefinition Height="Auto" />
+			<RowDefinition Height="*" />
+			<RowDefinition Height="Auto" />
+		</Grid.RowDefinitions>
+		<StackPanel HorizontalAlignment="Center" Grid.Row="0" Margin="0,20,0,20" >
+			<Button Command="{Binding LoadMapCommand}">Start game</Button>
+		</StackPanel>
+		<Viewbox  Grid.Row="1">
+			<ItemsControl ItemsSource="{Binding Cells}">
+				<ItemsControl.ItemsPanel>
+					<ItemsPanelTemplate>
+						<UniformGrid Rows="{Binding DataContext.MapSize, RelativeSource={RelativeSource AncestorType=ItemsControl}}"
+                         Columns="{Binding DataContext.MapSize, RelativeSource={RelativeSource AncestorType=ItemsControl}}"/>
+					</ItemsPanelTemplate>
+				</ItemsControl.ItemsPanel>
+				<ItemsControl.ItemTemplate>
+					<DataTemplate>
+						</DataTemplate>
+				</ItemsControl.ItemTemplate>
+			</ItemsControl>
+		</Viewbox>
+
+		<StatusBar Grid.Row="2" Visibility="{Binding GameStarted, Converter={StaticResource BooleanToVisibility}}">
+			<StatusBarItem>
+				<TextBlock Text="Enemies killed: " />
+			</StatusBarItem>
+			<StatusBarItem>
+				<TextBlock Text="{Binding EnemiesKilled}" />
+			</StatusBarItem>
+			<Separator />
+			<StatusBarItem>
+				<TextBlock Text="Time: " />
+			</StatusBarItem>
+			<StatusBarItem>
+				<TextBlock Text="{Binding Time, StringFormat={}{0:hh\\:mm\\:ss}}" />
+			</StatusBarItem>
+			<Separator />
+			<StatusBarItem />
+		</StatusBar>
+	</Grid>
+</UserControl>

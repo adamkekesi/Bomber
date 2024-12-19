@@ -14,7 +14,7 @@ namespace BomberTest
     {
         class TestUnit : Unit
         {
-            public TestUnit(Point startingPos) : base(startingPos)
+            public TestUnit(Point startingPos,IMap map) : base(startingPos,map)
             {
             }
 
@@ -28,15 +28,12 @@ namespace BomberTest
         public void TestMovement()
         {
             Direction dir = Direction.Up;
-            Unit unit = new TestUnit(new Point(0, 0));
-            List<Unit.MovedEventArgs> eventArgs = new List<Unit.MovedEventArgs>();
-            unit.Moved += (sender, e) => eventArgs.Add(e);
+            var map = MockMap().Object;
+            Unit unit = new TestUnit(new Point(0, 0),map);
 
             unit.Move(dir);
 
-            Assert.AreEqual(1, eventArgs.Count);
-            Assert.AreEqual(dir, eventArgs[0].Direction);
-            Assert.AreEqual(unit.Position, eventArgs[0].CurrentPos);
+            Mock.Get(map).Verify(m=>m.Move(new Point(0,0), dir),Times.Exactly(1));
 
         }
 
@@ -44,26 +41,36 @@ namespace BomberTest
         public void TestMovementDead()
         {
             Direction dir = Direction.Up;
-            Unit unit = new TestUnit(new Point(0, 0));
-            List<Unit.MovedEventArgs> eventArgs = new List<Unit.MovedEventArgs>();
-            unit.Moved += (sender, e) => eventArgs.Add(e);
+            var map = MockMap().Object;
+
+            Unit unit = new TestUnit(new Point(0, 0), map);
 
             unit.Kill();
             unit.Move(dir);
 
-            Assert.AreEqual(0, eventArgs.Count);
+            Mock.Get(map).Verify(m => m.Move(It.IsAny<Point>(), It.IsAny<Direction>()), Times.Never);
         }
 
         [TestMethod]
         public void TestKill()
         {
-            Unit unit = new TestUnit(new Point(0, 0));
+            var map = MockMap().Object;
+            Unit unit = new TestUnit(new Point(0, 0),map);
             List<EventArgs> eventArgs = new List<EventArgs>();
             unit.Died += (sender, e) => eventArgs.Add(e);
 
             unit.Kill();
 
             Assert.AreEqual(1, eventArgs.Count);
+        }
+
+        private Mock<IMap> MockMap()
+        {
+            Mock<IMap> mock = new Mock<IMap>();
+            mock.Setup(m => m.ForEachInArea(It.IsAny<Point>(), It.IsAny<int>(), It.IsAny<Action<IField>>()));
+            mock.Setup(m => m.Move(It.IsAny<Point>(), It.IsAny<Direction>()));
+            mock.Setup(m => m.RemoveField(It.IsAny<Point>()));
+            return mock;
         }
     }
 }

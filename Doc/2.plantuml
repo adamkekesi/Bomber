@@ -1,0 +1,73 @@
+@startuml
+
+enum Direction {
+    Up
+    Down
+    Left
+    Right
+}
+
+interface IMap {
+    --methods--
+    + Move(i: int, j: int, dir: Direction)
+    + Move(pos: Point, dir: Direction)
+    + ForEachInArea(origin: Point, radius: int, action: Action<IField>)
+    + RemoveField(i: int, j: int)
+    + RemoveField(pos: Point)
+    + PlacePlayer(player: Player)
+    --properties--
+    + this[i: int, j: int]: IField?
+    + this[p: Point]: IField?
+    + Size: int
+    --events--
+    + MapChanged(): EventHandler<MapChangedEventArgs>?
+}
+
+class Map {
+    --properties--
+    + Size: int
+    + this[i: int, j: int]: IField?
+    + this[p: Point]: IField?
+    --constructor--
+    + Map(cells: CellContent[,], r: Random, out enemies: List<Enemy>)
+    --methods--
+    + PlacePlayer(player: Player)
+    + RemoveField(i: int, j: int)
+    + RemoveField(pos: Point)
+    + Move(i: int, j: int, dir: Direction)
+    + Move(pos: Point, dir: Direction)
+    + ForEachInArea(origin: Point, radius: int, action: Action<IField>)
+    + Dispose()
+    - GetNewPos(pos: Point, dir: Direction): Point
+    - HandleCollision(field: IField, targetField: IField, newPos: Point)
+    - IsPointOutOfMap(p: Point): bool
+    --events--
+    + MapChanged(): EventHandler<MapChangedEventArgs>?
+}
+
+Map -up-|> IMap
+
+class MapChangedEventArgs {
+    + AffectedCells: Point[]
+    + MapChangedEventArgs(params affectedCells:Point[] )
+}
+
+Map .. MapChangedEventArgs
+IMap .. MapChangedEventArgs
+
+Unit -- "-map" IMap  :  moves on >
+
+Map o-- "nxn\n-fields" IField
+
+IMap -up-|> IDisposable
+
+interface IField{
+
+}
+
+interface IDisposable {
+    + Dispose()
+}
+
+abstract class Unit
+@enduml

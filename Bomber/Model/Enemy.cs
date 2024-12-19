@@ -13,7 +13,7 @@ namespace Bomber.Model
 
         public Direction Orientation { get; private set; }
 
-        public Enemy(Random r, Point startingPos) : base(startingPos)
+        public Enemy(Random r, IMap map, Point startingPos) : base(startingPos, map)
         {
             this.r = r;
             this.Orientation = Direction.Up;
@@ -35,7 +35,7 @@ namespace Bomber.Model
             {
                 Direction[] availableDirections = ((Direction[])Enum.GetValues(typeof(Direction))).Where(d => d != Orientation)
                                                                                                   .ToArray();
-                
+
                 Orientation = availableDirections[r.Next(availableDirections.Length)];
             }
         }

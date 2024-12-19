@@ -11,12 +11,12 @@ using System.Threading.Tasks;
 namespace BomberTest
 {
     [TestClass]
-    public class GameTest
+    public class BomberModelTest
     {
         [TestMethod]
         public void TestPlayerStep()
         {
-            Mock<Game> game = InitGameWithoutEnemies(out Mock<Player> player, out Mock<Map> map, out _);
+            Mock<BomberModel> game = InitGameWithoutEnemies(out Mock<Player> player, out Mock<IMap> map, out _);
 
             game.Object.PlayerStep(Direction.Right);
 
@@ -29,7 +29,7 @@ namespace BomberTest
         [TestMethod]
         public void TestPlantBomb()
         {
-            Mock<Game> game = InitGameWithoutEnemies(out Mock<Player> player, out Mock<Map> map, out Mock<BombCollection> bombs);
+            Mock<BomberModel> game = InitGameWithoutEnemies(out Mock<Player> player, out Mock<IMap> map, out Mock<BombCollection> bombs);
             Bomb bomb = new Bomb(new Point(0, 0), 1000, 3);
             player.Setup(m => m.PlantBomb(It.IsAny<int>(), It.IsAny<int>())).Returns(bomb);
             bombs.Setup(b => b.PlantBomb(It.IsAny<Bomb>()));
@@ -45,13 +45,13 @@ namespace BomberTest
         [TestMethod]
         public void TestPause()
         {
-            Mock<Game> game = InitGameWithOneEnemy(out Mock<Player> player, out Mock<Map> map, out Mock<Enemy> enemy, out Mock<BombCollection> bombs);
+            Mock<BomberModel> game = InitGameWithOneEnemy(out Mock<Player> player, out Mock<IMap> map, out Mock<Enemy> enemy, out Mock<BombCollection> bombs);
             enemy.Setup(m => m.Move());
 
             bool timeElapsed = false;
             game.Object.TimeElapsed += (sender, args) => timeElapsed = true;
 
-            game.Object.Pause();
+            game.Object.PauseToggle();
 
             Mock.Get(bombs.Object).Verify(m => m.Pause(), Times.Exactly(1));
             Thread.Sleep(2000);
@@ -65,10 +65,10 @@ namespace BomberTest
         [TestMethod]
         public void TestEnemySteps()
         {
-            Mock<Game> game = InitGameWithOneEnemy(out Mock<Player> player, out Mock<Map> map, out Mock<Enemy> enemy, out Mock<BombCollection> bombs);
+            Mock<BomberModel> game = InitGameWithOneEnemy(out Mock<Player> player, out Mock<IMap> map, out Mock<Enemy> enemy, out Mock<BombCollection> bombs);
             enemy.Setup(m => m.Move());
             var a = game.Object;
-            Thread.Sleep(1400+300);
+            Thread.Sleep(1400 + 300);
 
             Mock.Get(enemy.Object).Verify(m => m.Move(), Times.Exactly(1));
 
@@ -79,7 +79,7 @@ namespace BomberTest
         [TestMethod]
         public void TestTimeElapsed()
         {
-            Mock<Game> game = InitGameWithoutEnemies(out Mock<Player> player, out Mock<Map> map, out Mock<BombCollection> bombs);
+            Mock<BomberModel> game = InitGameWithoutEnemies(out Mock<Player> player, out Mock<IMap> map, out Mock<BombCollection> bombs);
 
             bool timeElapsed = false;
             game.Object.TimeElapsed += (sender, args) => timeElapsed = true;
@@ -88,35 +88,38 @@ namespace BomberTest
             Assert.IsTrue(timeElapsed);
         }
 
-        private Mock<Game> InitGameWithoutEnemies(out Mock<Player> player, out Mock<Map> map, out Mock<BombCollection> bombs)
+        private Mock<BomberModel> InitGameWithoutEnemies(out Mock<Player> player, out Mock<IMap> map, out Mock<BombCollection> bombs)
         {
-            player = new Mock<Player>(new Point(0, 0)) { CallBase = true };
-            map = new Mock<Map>(new IField?[,]
-            {
-                {player.Object, null },
-                {null,null}
-            });
-            bombs = new Mock<BombCollection>();
-            Mock<Game> game = new Mock<Game>(player.Object, map.Object, new List<Enemy>(), bombs.Object) { CallBase = true };
+            map = new Mock<IMap>();
+            player = new Mock<Player>(map.Object, new Point(0, 0)) { CallBase = true };
+            
+            bombs = new Mock<BombCollection>(map.Object);
+            Mock<BomberModel> game = new Mock<BomberModel>(player.Object, map.Object, new List<Enemy>(), bombs.Object) { CallBase = true };
 
             return game;
         }
 
-        private Mock<Game> InitGameWithOneEnemy(out Mock<Player> player, out Mock<Map> map, out Mock<Enemy> enemy, out Mock<BombCollection> bombs)
+        private Mock<BomberModel> InitGameWithOneEnemy(out Mock<Player> player, out Mock<IMap> map, out Mock<Enemy> enemy, out Mock<BombCollection> bombs)
         {
             Random r = new Random();
-            player = new Mock<Player>(new Point(0, 0)) { CallBase = true };
-            enemy = new Mock<Enemy>(r, new Point(1, 1));
-            map = new Mock<Map>(new IField?[,]
-            {
-                {player.Object, null },
-                {null,enemy.Object }
-            });
-            bombs = new Mock<BombCollection>();
+            map = new Mock<IMap>();
+            player = new Mock<Player>(map.Object, new Point(0, 0)) { CallBase = true };
+            enemy = new Mock<Enemy>(r, map.Object, new Point(1, 1));
+
+            bombs = new Mock<BombCollection>(map.Object);
             var enemies = new List<Enemy>() { enemy.Object };
-            Mock<Game> game = new Mock<Game>(player.Object, map.Object, enemies, bombs.Object) { CallBase = true };
+            Mock<BomberModel> game = new Mock<BomberModel>(player.Object, map.Object, enemies, bombs.Object) { CallBase = true };
 
             return game;
+        }
+
+        private Mock<IMap> MockMap()
+        {
+            Mock<IMap> mock = new Mock<IMap>();
+            mock.Setup(m => m.ForEachInArea(It.IsAny<Point>(), It.IsAny<int>(), It.IsAny<Action<IField>>()));
+            mock.Setup(m => m.Move(It.IsAny<Point>(), It.IsAny<Direction>()));
+            mock.Setup(m => m.RemoveField(It.IsAny<Point>()));
+            return mock;
         }
     }
 }

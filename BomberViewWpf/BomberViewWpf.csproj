@@ -1,0 +1,33 @@
+﻿<Project Sdk="Microsoft.NET.Sdk">
+
+  <PropertyGroup>
+    <OutputType>WinExe</OutputType>
+    <TargetFramework>net8.0-windows</TargetFramework>
+    <Nullable>enable</Nullable>
+    <ImplicitUsings>enable</ImplicitUsings>
+    <UseWPF>true</UseWPF>
+  </PropertyGroup>
+
+  <ItemGroup>
+    <None Remove="Images\bomb.ico" />
+    <None Remove="Images\bomb.png" />
+    <None Remove="Images\empty.png" />
+    <None Remove="Images\enemy.png" />
+    <None Remove="Images\player.png" />
+    <None Remove="Images\wall.png" />
+  </ItemGroup>
+
+  <ItemGroup>
+    <ProjectReference Include="..\Bomber\Bomber.csproj" />
+  </ItemGroup>
+
+  <ItemGroup>
+    <Resource Include="Images\bomb.ico" />
+    <Resource Include="Images\bomb.png" />
+    <Resource Include="Images\empty.png" />
+    <Resource Include="Images\enemy.png" />
+    <Resource Include="Images\player.png" />
+    <Resource Include="Images\wall.png" />
+  </ItemGroup>
+
+</Project>

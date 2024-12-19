@@ -2,6 +2,7 @@
 using System.Collections.Generic;
 using System.Drawing;
 using System.Linq;
+using System.Numerics;
 using System.Text;
 using System.Threading.Tasks;
 
@@ -9,31 +10,19 @@ namespace Bomber.Model
 {
     public abstract class Unit : IField, IDisposable
     {
-        public class MovedEventArgs
-        {
-            public Point CurrentPos { get; private set; }
-
-            public Direction Direction { get; private set; }
-
-            public MovedEventArgs(Point currentPos, Direction direction)
-            {
-                CurrentPos = currentPos;
-                Direction = direction;
-            }
-        }
-
-        protected Unit(Point startingPos)
+        protected Unit(Point startingPos, IMap map)
         {
             Position = startingPos;
+            this.map = map;
         }
 
         public event EventHandler? Died;
 
-        public event EventHandler<MovedEventArgs>? Moved;
-
         public bool Alive { get; private set; } = true;
 
         public Point Position { get; set; }
+
+        protected IMap map;
 
         public abstract void OnCollision(IField otherField, Point point);
 
@@ -43,19 +32,25 @@ namespace Bomber.Model
             {
                 return;
             }
-            Moved?.Invoke(this, new MovedEventArgs(Position, dir));
+            map.Move(Position, dir);
         }
 
         public virtual void Kill()
         {
             Alive = false;
-            Died?.Invoke(this, EventArgs.Empty);
+            OnDied();
         }
 
         public virtual void Dispose()
         {
-            Moved = null;
             Died = null;
+        }
+
+        protected virtual void OnDied()
+        {
+            Died?.Invoke(this, EventArgs.Empty);
+            map.RemoveField(Position);
+            Dispose();
         }
     }
 }

@@ -208,10 +208,11 @@ namespace BomberTest
                 {CellContent.Enemy, CellContent.Wall,CellContent.Enemy }
             };
 
-            Mock<Player> player = new Mock<Player>(new Point(0, 0));
             Random r = new Random();
-
-            return new Map(cells, player.Object, r, out enemies);
+            var map = new Map(cells, r, out enemies);
+            Mock<Player> player = new Mock<Player>(map,new Point(0, 0));
+            map.PlacePlayer(player.Object);
+            return map;
         }
 
         private Map InitTestMapForMovement(out List<Enemy> enemies)
@@ -223,10 +224,11 @@ namespace BomberTest
                 {CellContent.Enemy, CellContent.Enemy,CellContent.Empty}
             };
 
-            Mock<Player> player = new Mock<Player>(new Point(0, 0));
             Random r = new Random();
-
-            return new Map(cells, player.Object, r, out enemies);
+            var map = new Map(cells, r, out enemies);
+            Mock<Player> player = new Mock<Player>(map,new Point(0, 0));
+            map.PlacePlayer(player.Object);
+            return map;
         }
 
         private Map InitTestMapWithMockedFields()

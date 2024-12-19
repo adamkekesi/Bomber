@@ -1,0 +1,206 @@
+@startuml
+abstract class Unit {
+    # Unit(startingPos: Point, map: IMap)
+    --methods--
+    + Move(dir: Direction)
+    + Kill()
+    + Dispose()
+    + {abstract} OnCollision(otherField: IField, point: Point)
+    # OnDied()
+    --properties--
+    + Position(): Point 
+    + Alive(): bool
+    --events--
+    + Died(): EventHandler?
+}
+
+interface IDisposable {
+    + Dispose()
+}
+
+interface IField {
+    + OnCollision(otherField: IField, point: Point)
+}
+
+class Player {
+    + Player(map: IMap, startingPos: Point)
+    --methods--
+    + OnCollision(otherField: IField, point: Point)
+    + PlantBomb(timeTillExplosion: int, radius: int): Bomb
+}
+
+class Enemy {
+    - r: Random
+    + Enemy(r: Random, map: IMap, startingPos: Point)
+    --methods--
+    + Move()
+    + OnCollision(otherField: IField, pos: Point)
+    --properties--
+    + Orientation(): Direction
+}
+
+enum Direction {
+    Up
+    Down
+    Left
+    Right
+}
+
+interface IMap {
+    --methods--
+    + Move(i: int, j: int, dir: Direction)
+    + Move(pos: Point, dir: Direction)
+    + ForEachInArea(origin: Point, radius: int, action: Action<IField>)
+    + RemoveField(i: int, j: int)
+    + RemoveField(pos: Point)
+    + PlacePlayer(player: Player)
+    --properties--
+    + this[i: int, j: int]: IField?
+    + this[p: Point]: IField?
+    + Size: int
+    --events--
+    + MapChanged(): EventHandler<MapChangedEventArgs>?
+}
+
+class Map {
+    --properties--
+    + Size: int
+    + this[i: int, j: int]: IField?
+    + this[p: Point]: IField?
+    --constructor--
+    + Map(cells: CellContent[,], r: Random, out enemies: List<Enemy>)
+    --methods--
+    + PlacePlayer(player: Player)
+    + RemoveField(i: int, j: int)
+    + RemoveField(pos: Point)
+    + Move(i: int, j: int, dir: Direction)
+    + Move(pos: Point, dir: Direction)
+    + ForEachInArea(origin: Point, radius: int, action: Action<IField>)
+    + Dispose()
+    - GetNewPos(pos: Point, dir: Direction): Point
+    - HandleCollision(field: IField, targetField: IField, newPos: Point)
+    - IsPointOutOfMap(p: Point): bool
+    --events--
+    + MapChanged(): EventHandler<MapChangedEventArgs>?
+}
+
+Map -up-|> IMap
+
+class MapChangedEventArgs {
+    + AffectedCells: Point[]
+    + MapChangedEventArgs(params affectedCells:Point[] )
+}
+
+class Wall {
+    + OnCollision(otherField: IField, point: Point)
+}
+
+class Bomb {
+    -timer:Timer
+    + Bomb(position: Point, timeTillExplosion: int, radius: int)
+    --methods--
+    + Pause()
+    + Resume()
+    + Dispose()
+    --properties--
+    + Position(): Point
+    + Radius(): int
+    --events--
+    + Exploded(): EventHandler?
+}
+
+class BombCollection {
+    + BombCollection(map: IMap)
+    + BombCollection(list: List<Bomb>, map: IMap)
+    --methods--
+    + PlantBomb(bomb: Bomb)
+    + Remove(bomb: Bomb)
+    + Pause()
+    + Resume()
+    + Dispose()
+    - OnBombExploded(sender: object?, e: EventArgs)
+    --events--
+    + BombsChanged(): EventHandler<BombsChangedEventArgs>?
+}
+
+class BombsChangedEventArgs {
+    + BombsChangedEventArgs(change: ChangeType, bomb: Bomb)
+    --properties--
+    + Change(): ChangeType
+    + Bomb(): Bomb
+}
+
+enum ChangeType {
+    Added
+    Removed
+}
+
+class BomberModel {
+    - enemiesKilled: int
+    - time: TimeSpan
+
+    - map: IMap
+    - player: Player
+    - enemies: List<Enemy>
+    - bombs: BombCollection
+    
+    - r: Random
+    - enemyStepScheduler: System.Timers.Timer
+    - timer: System.Timers.Timer
+
+    
+    + BomberModel(cells: CellContent[,])
+    + BomberModel(player: Player, map: IMap, enemies: List<Enemy>, bombs: BombCollection)
+    --methods--
+    + PlayerStep(dir: Direction)
+    + PlantBomb()
+    + PauseToggle()
+    - Pause()
+    - Resume()
+    - OnEnemyStepSchedulerTick(sender: object?, e: ElapsedEventArgs)
+    - OnEnemyDied(sender: object?, e: EventArgs)
+    - OnPlayerDied(sender: object?, e: EventArgs)
+    - OnGameOver()
+    - OnTick(sender: object?, e: ElapsedEventArgs)
+    - Dispose()
+    ---properties--
+    + Won(): bool
+    + EnemiesKilled(): int
+    + Time(): TimeSpan
+    + Map(): IMap
+    + Bombs(): BombCollection
+    --events--
+    + GameOver(): EventHandler?
+    + StatUpdated(): EventHandler?
+    + TimeElapsed(): EventHandler?
+}
+
+BomberModel -|> IDisposable
+
+BombCollection -|> IDisposable
+BombsChangedEventArgs -- "-bomb" Bomb
+BombCollection .. BombsChangedEventArgs
+BombCollection *-- "*\n-bombs" Bomb
+BombCollection -- "-map" IMap: kills it's units >
+
+Bomb -|> IDisposable
+
+Wall -up-|> IField
+
+Map .. MapChangedEventArgs
+IMap .. MapChangedEventArgs
+
+Unit -- "-map" IMap  :  moves on >
+
+Map *-- "nxn\n-fields" IField
+
+IMap -up-|> IDisposable
+
+Enemy --up-|> Unit
+
+Player --up-|> Unit
+
+Unit -up-|> IDisposable
+Unit -up-|> IField
+
+@enduml

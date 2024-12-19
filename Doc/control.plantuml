@@ -1,0 +1,26 @@
+@startuml
+
+class App {
+    + App()
+    + App_Startup(sender: Object, e: StartupEventArgs)
+    --ViewModel event handlers--
+    - ViewModel_LoadGame(sender: EventArgs, e: EventArgs)
+    - ViewModel_Move(sender: Object, dir: Direction)
+    - ViewModel_PlantBomb(sender: Object, e: EventArgs)
+    - ViewModel_PauseToggle(sender: Object, e: EventArgs)
+    --Model event handlers--
+    - Model_GameOver(sender: EventArgs, e: EventArgs)
+}
+
+class BomberViewModel{}
+
+class MainWindow{}
+
+class BomberModel{
+
+}
+
+App o.. "0..1\n-viewModel" BomberViewModel
+App o.. "0..1\n-model" BomberModel
+App o.. "0..1\n-view" MainWindow
+@enduml

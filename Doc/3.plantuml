@@ -1,0 +1,58 @@
+@startuml
+class Bomb {
+    -timer:Timer
+    + Bomb(position: Point, timeTillExplosion: int, radius: int)
+    --methods--
+    + Pause()
+    + Resume()
+    + Dispose()
+    --properties--
+    + Position(): Point
+    + Radius(): int
+    --events--
+    + Exploded(): EventHandler?
+}
+
+class BombCollection {
+    + BombCollection(map: IMap)
+    + BombCollection(list: List<Bomb>, map: IMap)
+    --methods--
+    + PlantBomb(bomb: Bomb)
+    + Remove(bomb: Bomb)
+    + Pause()
+    + Resume()
+    + Dispose()
+    - OnBombExploded(sender: object?, e: EventArgs)
+    --events--
+    + BombsChanged(): EventHandler<BombsChangedEventArgs>?
+}
+
+class BombsChangedEventArgs {
+    + BombsChangedEventArgs(change: ChangeType, bomb: Bomb)
+    --properties--
+    + Change(): ChangeType
+    + Bomb(): Bomb
+}
+
+enum ChangeType {
+    Added
+    Removed
+}
+
+BombCollection -|> IDisposable
+BombsChangedEventArgs -- "-bomb" Bomb
+BombCollection .. BombsChangedEventArgs
+BombCollection o-- "*\n-bombs" Bomb
+BombCollection -- "-map" IMap: kills it's units >
+
+Bomb -|> IDisposable
+
+interface IMap{
+
+}
+
+
+interface IDisposable {
+    + Dispose()
+}
+@enduml

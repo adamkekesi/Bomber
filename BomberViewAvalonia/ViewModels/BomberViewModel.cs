@@ -19,6 +19,7 @@ namespace BomberViewAvalonia.ViewModels
 
         private BomberModel? model;
 
+        private readonly bool isMobile;
         #endregion
 
         #region Properties
@@ -47,6 +48,12 @@ namespace BomberViewAvalonia.ViewModels
         public bool GameStarted => model != null;
 
         public int MapSize => model?.Map.Size ?? 0;
+
+        public bool Paused => model?.Paused ?? false;
+
+        public bool Running => !Paused;
+
+        public bool ShowControls => GameStarted && isMobile;
         #endregion
 
         #region Events
@@ -64,7 +71,7 @@ namespace BomberViewAvalonia.ViewModels
         #endregion
 
         #region Constructor
-        public BomberViewModel()
+        public BomberViewModel(bool isMobile)
         {
             MoveCommand = new RelayCommand<string>(OnMove);
             PlantBombCommand = new RelayCommand(OnPlantBomb);
@@ -73,7 +80,7 @@ namespace BomberViewAvalonia.ViewModels
                 () => OnLoadMap(),
                 () => !GameStarted || model?.IsGameOver == true);
             Cells = new ObservableCollection<CellViewModel>();
-
+            this.isMobile = isMobile;
         }
         #endregion
 
@@ -102,6 +109,7 @@ namespace BomberViewAvalonia.ViewModels
             model.Map.MapChanged += OnMapChanged;
             model.Bombs.BombsChanged += OnBombsChanged;
             OnPropertyChanged(nameof(GameStarted));
+            OnPropertyChanged(nameof(ShowControls));
             OnPropertyChanged(nameof(MapSize));
             LoadMapCommand.NotifyCanExecuteChanged();
         }
@@ -143,17 +151,16 @@ namespace BomberViewAvalonia.ViewModels
 
         private void OnGameOver(object? sender, EventArgs e)
         {
-            //TODO:Handle thread dispatch
-            /*Application.Current.Dispatcher.BeginInvoke(() =>
-            {
-                LoadMapCommand.RaiseCanExecuteChanged();
-            });*/
-            if (!Dispatcher.UIThread.CheckAccess()) // hamisat ad vissza, ha nem a dispatcher thread-en vagyunk
+            if (!Dispatcher.UIThread.CheckAccess())
             {
                 Dispatcher.UIThread.InvokeAsync(() =>
                 {
                     LoadMapCommand.NotifyCanExecuteChanged();
                 });
+            }
+            else
+            {
+                LoadMapCommand.NotifyCanExecuteChanged();
             }
         }
 
@@ -168,9 +175,9 @@ namespace BomberViewAvalonia.ViewModels
 
         }
 
-        private void OnMove(object? param)
+        private void OnMove(string? dir)
         {
-            if (param is not String dir)
+            if (dir == null)
             {
                 return;
             }
@@ -186,6 +193,8 @@ namespace BomberViewAvalonia.ViewModels
         private void OnPauseToggle()
         {
             model?.PauseToggle();
+            OnPropertyChanged(nameof(Paused));
+            OnPropertyChanged(nameof(Running));
         }
         #endregion
 

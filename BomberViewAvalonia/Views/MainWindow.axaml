@@ -6,7 +6,17 @@
         xmlns:views="clr-namespace:BomberViewAvalonia.Views"
         mc:Ignorable="d" d:DesignWidth="800" d:DesignHeight="450"
         x:Class="BomberViewAvalonia.Views.MainWindow"
-        Icon="/Assets/avalonia-logo.ico"
+        Icon="/Assets/bomb.ico"
         Title="BomberViewAvalonia">
-        <views:MainView />
+	<Window.KeyBindings>
+		<KeyBinding Gesture="W" Command="{Binding MoveCommand}" CommandParameter="0" />
+		<KeyBinding Gesture="A" Command="{Binding MoveCommand}" CommandParameter="2" />
+		<KeyBinding Gesture="S" Command="{Binding MoveCommand}" CommandParameter="1" />
+		<KeyBinding Gesture="D" Command="{Binding MoveCommand}" CommandParameter="3" />
+		<KeyBinding Gesture="Space" Command="{Binding PlantBombCommand}" />
+		<KeyBinding Gesture="C" Command="{Binding PauseToggleCommand}" />
+
+	</Window.KeyBindings>
+
+	<views:MainView />
 </Window>

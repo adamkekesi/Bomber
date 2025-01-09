@@ -14,5 +14,13 @@ class MapLoader {
     + LoadAsync() : Task<CellContent[,]>
 }
 
+class StreamMapLoader {
+    - stream: Stream
+    + StreamMapLoader(stream: Stream)
+    + LoadAsync() : Task<CellContent[,]>
+}
+
 MapLoader -up-|>IMapLoader
+StreamMapLoader -up-|>IMapLoader
+
 @enduml

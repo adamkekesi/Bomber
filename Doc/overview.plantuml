@@ -1,0 +1,152 @@
+@startuml
+enum CellContent {
+    Enemy
+    Wall
+    Empty
+}
+interface IMapLoader {
+}
+
+class MapLoader {
+}
+
+class StreamMapLoader {
+}
+
+MapLoader -up-|>IMapLoader
+StreamMapLoader -up-|>IMapLoader
+
+enum Direction {
+    
+}
+
+abstract class Unit {
+
+}
+
+interface IField {
+}
+
+class Player {
+}
+
+class Enemy {
+}
+
+class Wall {
+}
+Wall -up-|> IField
+
+Enemy --up-|> Unit
+
+Player --up-|> Unit
+
+Unit -up-|> IField
+
+
+interface IMap {
+   
+}
+
+class Map {
+   
+}
+
+Map -up-|> IMap
+
+class MapChangedEventArgs {
+}
+
+Map .. MapChangedEventArgs
+IMap .. MapChangedEventArgs
+
+Unit -- "-map" IMap  :  moves on >
+
+Map o-- "nxn\n-fields" IField
+
+
+interface IField{
+
+}
+
+abstract class Unit
+
+class Bomb {
+ 
+}
+
+class BombCollection {
+  
+}
+
+class BombsChangedEventArgs {
+  
+}
+
+enum ChangeType {
+    
+}
+
+BombsChangedEventArgs -- "-bomb" Bomb
+BombCollection .. BombsChangedEventArgs
+BombCollection o-- "*\n-bombs" Bomb
+BombCollection -- "-map" IMap: kills it's units >
+
+
+interface IMap{
+
+}
+
+class BomberModel {
+   
+}
+
+interface IMap{
+
+}
+
+class Player{
+
+}
+
+class Enemy{}
+
+class BombCollection{}
+
+BomberModel o... "1\n-map" IMap
+BomberModel o.. "1\n-player" Player
+BomberModel o.. "1..*\n-enemies" Enemy
+BomberModel o.. "1\n-bombs" BombCollection
+
+class CellViewModel {
+   
+}
+
+class BomberViewModel {
+   
+}
+
+interface IField{
+
+}
+CellViewModel -- "0..1\n-field" IField
+BomberViewModel -- "0..1\n-model" BomberModel
+
+class BomberModel{
+
+}
+
+BomberViewModel o-- "nxn\n+Cells" CellViewModel
+
+class App {
+}
+
+class BomberViewModel{}
+
+class BomberModel{
+
+}
+
+App o.. "0..1\n-viewModel" BomberViewModel
+App o.. "0..1\n-model" BomberModel
+@enduml

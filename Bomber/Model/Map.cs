@@ -8,7 +8,7 @@ using System.Threading.Tasks;
 
 namespace Bomber.Model
 {
-    public class Map :  IMap
+    public class Map : IMap
     {
         public class OutOfMapException : Exception
         {
@@ -174,30 +174,8 @@ namespace Bomber.Model
 
         private void HandleCollision(IField field, IField targetField, Point newPos)
         {
-                targetField.OnCollision(field, newPos);
-                field.OnCollision(targetField, newPos);
-            Exception? ex = null;
-            try
-            {
-
-            }
-            catch (Exception e)
-            {
-                ex = e;
-            }
-
-            try
-            {
-            }
-            catch (Exception e)
-            {
-                ex = e;
-            }
-
-            if (ex != null)
-            {
-                throw ex;
-            }
+            targetField.OnCollision(field, newPos);
+            field.OnCollision(targetField, newPos);
         }
 
         private bool IsPointOutOfMap(Point p)

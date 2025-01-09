@@ -1,20 +1,5 @@
 @startuml
-class DelegateCommand {
-    - _execute: Action<Object?>
-    - _canExecute: Func<Object?, Boolean>?
-    + DelegateCommand(execute: Action<Object?>)
-    + DelegateCommand(canExecute: Func<Object?, Boolean>?, execute: Action<Object?>)
-    + CanExecute(parameter: Object?): Boolean
-    + Execute(parameter: Object?)
-    + RaiseCanExecuteChanged()
-    --events--
-    + CanExecuteChanged(): EventHandler?
-}
-class ViewModelBase {
-    + OnPropertyChanged(propertyName: String?): void
-    --events--
-    + PropertyChanged(): PropertyChangedEventHandler?
-}
+
 
 class CellViewModel {
     - bombPlaced: bool
@@ -33,22 +18,25 @@ class BomberViewModel {
     --Fields--
     - enemiesKilled: int
     - time: TimeSpan
+    - isMobile:bool
     --Properties--
     + EnemiesKilled(): int
     + Time(): TimeSpan
     + Cells(): ObservableCollection<CellViewModel>
     + GameStarted(): bool
     + MapSize(): int
+    + Paused(): boolean
+    + Running(): boolean
+    + ShowControls(): boolean
     --Events--
     + LoadMap(): EventHandler?
-    + Move(): EventHandler<Direction>?
-    + PlantBomb(): EventHandler?
-    + PauseToggle(): EventHandler?
     --Commands--
-    + MoveCommand(): DelegateCommand
-    + PlantBombCommand(): DelegateCommand
-    + PauseToggleCommand(): DelegateCommand
-    + LoadMapCommand(): DelegateCommand
+    + MoveCommand(): RelayCommand<string>
+    + PlantBombCommand(): RelayCommand
+    + PauseToggleCommand(): RelayCommand
+    + LoadMapCommand(): RelayCommand
+    --Constructor--
+    + BomberViewModel(isMobile: boolean)
     --Methods--
     + StartGame(model: BomberModel)
     --Event handlers--
@@ -57,17 +45,16 @@ class BomberViewModel {
     - OnMapChanged(sender: Map.MapChangedEventArgs)
     - OnGameOver(sender: EventArgs)
     - OnBombsChanged(sender: BombCollection.BombsChangedEventArgs)
+    - OnMove(dir:string?)
+    - OnPlantBomb()
+    - OnPauseToggle()
     --Event methods--
     - OnLoadMap()
-    - OnMove(param: Object?)
-    - OnPlantBomb(param: Object?)
-    - OnPauseToggle(param: Object?)
 }
 
 interface IField{
 
 }
-CellViewModel -up-|> ViewModelBase
 CellViewModel -- "0..1\n-field" IField
 BomberViewModel -- "0..1\n-model" BomberModel
 
@@ -76,5 +63,5 @@ class BomberModel{
 }
 
 BomberViewModel o-- "nxn\n+Cells" CellViewModel
-BomberViewModel -- DelegateCommand
+
 @enduml

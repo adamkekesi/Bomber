@@ -3,11 +3,13 @@
              xmlns:d="http://schemas.microsoft.com/expression/blend/2008"
              xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
              xmlns:vm="clr-namespace:BomberViewAvalonia.ViewModels"
+			 xmlns:v="clr-namespace:BomberViewAvalonia.Views"
              mc:Ignorable="d" d:DesignWidth="800" d:DesignHeight="450"
              x:Class="BomberViewAvalonia.Views.MainView"
-             x:DataType="vm:MainViewModel">
-  <Design.DataContext>
-  </Design.DataContext>
+             x:DataType="vm:BomberViewModel"
+             d:DataContext="{x:Static v:DesignData.ViewModel}">
+
+
 	<Grid>
 		<Grid.RowDefinitions>
 			<RowDefinition Height="Auto" />
@@ -22,32 +24,93 @@
 				<ItemsControl.ItemsPanel>
 					<ItemsPanelTemplate>
 						<UniformGrid Rows="{Binding DataContext.MapSize, RelativeSource={RelativeSource AncestorType=ItemsControl}}"
-                         Columns="{Binding DataContext.MapSize, RelativeSource={RelativeSource AncestorType=ItemsControl}}"/>
+						 Columns="{Binding DataContext.MapSize, RelativeSource={RelativeSource AncestorType=ItemsControl}}"/>
 					</ItemsPanelTemplate>
 				</ItemsControl.ItemsPanel>
 				<ItemsControl.ItemTemplate>
 					<DataTemplate>
-						</DataTemplate>
+						<Grid >
+							<Image IsVisible="{Binding PlayerVisible}" Source="../Assets/player.png"></Image>
+							<Image IsVisible="{Binding EnemyVisible}" Source="../Assets/enemy.png"></Image>
+							<Image IsVisible="{Binding WallVisible}" Source="../Assets/wall.png"></Image>
+							<Image IsVisible="{Binding BombPlaced}" Source="../Assets/bomb.png"></Image>
+						</Grid>
+					</DataTemplate>
 				</ItemsControl.ItemTemplate>
 			</ItemsControl>
 		</Viewbox>
 
-		<StatusBar Grid.Row="2" Visibility="{Binding GameStarted, Converter={StaticResource BooleanToVisibility}}">
-			<StatusBarItem>
-				<TextBlock Text="Enemies killed: " />
-			</StatusBarItem>
-			<StatusBarItem>
-				<TextBlock Text="{Binding EnemiesKilled}" />
-			</StatusBarItem>
-			<Separator />
-			<StatusBarItem>
-				<TextBlock Text="Time: " />
-			</StatusBarItem>
-			<StatusBarItem>
-				<TextBlock Text="{Binding Time, StringFormat={}{0:hh\\:mm\\:ss}}" />
-			</StatusBarItem>
-			<Separator />
-			<StatusBarItem />
-		</StatusBar>
+		<Border Grid.Row="2" BorderBrush="Black" BorderThickness="0 1 0 0">
+			<StackPanel  Orientation="Horizontal">
+				<TextBlock Text="Enemies killed: " Margin="10 2 2 2" />
+				<TextBlock Text="{Binding EnemiesKilled}" Margin="2" />
+				<TextBlock Text=" | " Margin="2" />
+				<TextBlock Text="Time: " Margin="2" />
+				<TextBlock Text="{Binding Time, StringFormat={}{0:hh\\:mm\\:ss}}" Margin="2" />
+			</StackPanel>
+		</Border>
+
+		<Canvas Grid.Row="1" IsVisible="{Binding ShowControls}">
+			<Grid Canvas.Right="0" Canvas.Bottom="0" Width="180" Height="180"  >
+				<Grid.ColumnDefinitions>
+					<ColumnDefinition Width="*"/>
+					<ColumnDefinition Width="*"/>
+					<ColumnDefinition Width="*"/>
+				</Grid.ColumnDefinitions>
+				<Grid.RowDefinitions>
+					<RowDefinition Height="*"  />
+					<RowDefinition Height="*" />
+					<RowDefinition Height="*" />
+				</Grid.RowDefinitions>
+				<Button Grid.Row="0" Grid.Column="1"   Command="{Binding MoveCommand}" CommandParameter="0">
+					<Button.Template>
+						<ControlTemplate>
+							<Image Source="../Assets/up.png" Stretch="Fill" />
+						</ControlTemplate>
+					</Button.Template>
+				</Button>
+				<Button Grid.Row="1" Grid.Column="0"   Command="{Binding MoveCommand}" CommandParameter="2">
+					<Button.Template>
+						<ControlTemplate>
+							<Image Source="../Assets/left.png" Stretch="Fill" />
+						</ControlTemplate>
+					</Button.Template>
+				</Button>
+				<Button Grid.Row="1" Grid.Column="2"   Command="{Binding MoveCommand}" CommandParameter="3">
+					<Button.Template>
+						<ControlTemplate>
+							<Image Source="../Assets/right.png" Stretch="Fill" />
+						</ControlTemplate>
+					</Button.Template>
+				</Button>
+				<Button Grid.Row="2" Grid.Column="1"   Command="{Binding MoveCommand}" CommandParameter="1">
+					<Button.Template>
+						<ControlTemplate>
+							<Image Source="../Assets/down.png" Stretch="Fill" />
+						</ControlTemplate>
+					</Button.Template>
+				</Button>
+
+				<Button Grid.Row="1" Grid.Column="1"   Command="{Binding PlantBombCommand}" >
+					<Button.Template>
+						<ControlTemplate>
+							<Image Source="../Assets/plant-bomb.png" Stretch="Fill" />
+						</ControlTemplate>
+					</Button.Template>
+				</Button>
+				<Button Grid.Row="2" Grid.Column="2" Width="30" Height="30" HorizontalAlignment="Center" VerticalAlignment="Center"  Command="{Binding PauseToggleCommand}" >
+					<Button.Template>
+						<ControlTemplate>
+							<Grid>
+								<Image IsVisible="{Binding Running}" Source="../Assets/pause.png" Stretch="Fill" />
+								<Image IsVisible="{Binding Paused}" Source="../Assets/resume.png" Stretch="Fill" />
+							</Grid>
+						</ControlTemplate>
+					</Button.Template>
+				</Button>
+			</Grid>
+
+		</Canvas>
 	</Grid>
+
 </UserControl>

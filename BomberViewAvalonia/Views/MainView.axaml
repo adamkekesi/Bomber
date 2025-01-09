@@ -23,8 +23,8 @@
 			<ItemsControl ItemsSource="{Binding Cells}">
 				<ItemsControl.ItemsPanel>
 					<ItemsPanelTemplate>
-						<UniformGrid Rows="{Binding DataContext.MapSize, RelativeSource={RelativeSource AncestorType=ItemsControl}}"
-						 Columns="{Binding DataContext.MapSize, RelativeSource={RelativeSource AncestorType=ItemsControl}}"/>
+						<UniformGrid Rows="{Binding DataContext.MapSize }"
+						 Columns="{Binding DataContext.MapSize}"/>
 					</ItemsPanelTemplate>
 				</ItemsControl.ItemsPanel>
 				<ItemsControl.ItemTemplate>
